@@ -1,0 +1,220 @@
+.practice-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: var(--text-primary);
+}
+
+.practice-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.practice-header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.skill-filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.skill-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skill-btn.active,
+.skill-btn:hover {
+    background: var(--primary-color, #4F46E5);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+/* Category Sections */
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.category-section {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.category-heading {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    border-left: 4px solid #10B981;
+    padding-left: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+    padding: 0.5rem 1rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Question Card Updates */
+.question-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.q-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.q-tag.reading {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+}
+
+.q-tag.listening {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60A5FA;
+}
+
+.q-tag.writing {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+}
+
+.q-tag.speaking {
+    background: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+}
+
+.q-tag.default {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+}
+
+.topic-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(139, 92, 246, 0.15);
+    color: #A78BFA;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.q-preview {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    color: #e2e8f0;
+}
+
+.q-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.q-type-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.start-btn {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.start-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.loading-state,
+.empty-state,
+.error-message {
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+}
+
+.error-message button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

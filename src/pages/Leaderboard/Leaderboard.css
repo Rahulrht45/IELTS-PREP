@@ -1,0 +1,11 @@
+.leaderboard-page {
+    min-height: calc(100vh - 80px);
+    /* Fill screen minus header */
+    background: linear-gradient(135deg, #E0F2FE 0%, #7DD3FC 50%, #38BDF8 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+[data-theme="dark"] .leaderboard-page {
+    background: linear-gradient(135deg, #0C4A6E 0%, #075985 50%, #0369A1 100%);
+}

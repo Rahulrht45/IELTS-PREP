@@ -1,0 +1,450 @@
+/* Footer Layout - Ultra Premium Showcase */
+.footer-section {
+    background-color: #0B1120;
+    /* Deep Charcoal */
+    position: relative;
+    padding: 8rem 1.5rem 4rem;
+    overflow: hidden;
+    color: #F8FAFC;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Enhanced Aura Glow Effect */
+.footer-aura {
+    position: absolute;
+    top: -200px;
+    right: -100px;
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.15), rgba(34, 211, 238, 0.05), transparent 60%);
+    filter: blur(100px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.footer-aura-2 {
+    position: absolute;
+    bottom: -200px;
+    left: -100px;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.1), rgba(59, 130, 246, 0.1), transparent 60%);
+    filter: blur(100px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* CTA Top Section */
+.footer-cta-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 5rem;
+}
+
+.footer-cta-text h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.footer-cta-text p {
+    font-size: 1.25rem;
+    color: #94A3B8;
+    max-width: 500px;
+    font-weight: 300;
+}
+
+.footer-buttons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* High-Gloss Red Button */
+.btn-neon-red {
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+    font-weight: 700;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 10px 15px -3px rgba(239, 68, 68, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    font-size: 1.05rem;
+}
+
+.btn-neon-red::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+    opacity: 0.8;
+}
+
+.btn-neon-red:hover {
+    box-shadow:
+        0 20px 25px -5px rgba(239, 68, 68, 0.5),
+        0 8px 10px -6px rgba(239, 68, 68, 0.4);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.btn-glass-signin {
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-glass-signin:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 12-Column Grid Footer Content */
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 3rem;
+}
+
+/* Brand - Col 1-4 */
+.footer-brand {
+    grid-column: span 4;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.03em;
+}
+
+.brand-desc {
+    color: #94A3B8;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.1rem;
+}
+
+.social-icon:hover {
+    background: linear-gradient(135deg, #7C3AED, #22D3EE);
+    color: white;
+    transform: translateY(-3px);
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(34, 211, 238, 0.2);
+}
+
+/* Links - Col 5-12 */
+.footer-links-group {
+    grid-column: span 2;
+}
+
+.footer-heading {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748B;
+}
+
+.footer-link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-link-item {
+    margin-bottom: 1.1rem;
+}
+
+.footer-link {
+    color: #CBD5E1;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s;
+    position: relative;
+    font-weight: 400;
+}
+
+.footer-link:hover {
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* Newsletter - Col 9-12 */
+/* Standout Feature: Neon Gradient Border */
+.footer-newsletter {
+    grid-column: span 4;
+}
+
+.newsletter-box {
+    position: relative;
+    background: rgba(11, 17, 32, 0.6);
+    /* Semi-transparent charcoal */
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    /* The Trick for Gradient Border */
+    background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+.newsletter-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: -3px;
+    /* Match border width */
+    z-index: -1;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #A855F7, #06B6D4);
+    /* Neon Purple to Cyan */
+    filter: blur(2px);
+    /* Slight glow spread */
+}
+
+/* Additional Outer Glow */
+.newsletter-box::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #A855F7, #06B6D4);
+    filter: blur(30px);
+    opacity: 0.2;
+    z-index: -2;
+    border-radius: 24px;
+}
+
+.newsletter-input-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    position: relative;
+}
+
+.footer-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: white;
+    outline: none;
+    transition: border-color 0.3s;
+    font-size: 1rem;
+}
+
+.footer-input:focus {
+    border-color: #A855F7;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.btn-subscribe {
+    background: #EF4444;
+    /* Vibrant Red */
+    border: none;
+    border-radius: 12px;
+    color: white;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s;
+    /* High Gloss Logic */
+    background: linear-gradient(to bottom, #EF4444, #DC2626);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.btn-subscribe:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #64748B;
+    font-size: 0.9rem;
+}
+
+.footer-legal-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.footer-legal-links a {
+    color: #64748B;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-legal-links a:hover {
+    color: white;
+}
+
+/* Chat Button - Pill Shaped Green Glowing Element */
+.chat-widget-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #10B981, #059669);
+    border-radius: 99px;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chat-widget-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.6);
+}
+
+.chat-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(0.8);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-brand {
+        grid-column: span 2;
+    }
+
+    .footer-links-group {
+        grid-column: span 1;
+    }
+
+    .footer-newsletter {
+        grid-column: span 2;
+        margin-top: 2rem;
+    }
+
+    .footer-cta-wrapper {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-brand,
+    .footer-newsletter,
+    .footer-links-group {
+        grid-column: span 1;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .chat-widget-btn {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}

@@ -1,0 +1,22 @@
+.help-center-page {
+    padding: 6rem 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-list {
+    margin-top: 3rem;
+}
+
+.faq-item {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.faq-item summary {
+    font-weight: 600;
+    cursor: pointer;
+}

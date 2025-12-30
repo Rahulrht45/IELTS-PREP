@@ -1,0 +1,239 @@
+/* Reading Group Blocks - Enhanced with Neon Effects */
+.reading-group-block {
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(6, 182, 212, 0.03) 100%);
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.reading-group-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.reading-group-block:hover {
+    transform: translateY(-2px);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow:
+        0 8px 24px rgba(16, 185, 129, 0.15),
+        0 0 20px rgba(16, 185, 129, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.reading-group-block:hover::before {
+    opacity: 1;
+}
+
+.r-group-header {
+    margin-bottom: 0.85rem;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+    padding-bottom: 0.6rem;
+    position: relative;
+}
+
+.r-group-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #10B981, #06B6D4);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.reading-group-block:hover .r-group-header::after {
+    width: 100%;
+}
+
+.r-group-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #10B981 0%, #06B6D4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    text-shadow: none;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+    letter-spacing: 0.3px;
+    transition: filter 0.3s ease;
+}
+
+.reading-group-block:hover .r-group-title {
+    filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.6));
+}
+
+.r-group-desc {
+    font-size: 0.75rem;
+    color: rgba(16, 185, 129, 0.8);
+    font-style: normal;
+    font-weight: 500;
+    display: block;
+    margin-top: 4px;
+    letter-spacing: 0.2px;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.reading-group-block:hover .r-group-desc {
+    color: rgba(6, 182, 212, 0.95);
+    opacity: 1;
+}
+
+/* Mega Menu Reading Groups */
+.reading-mega-group {
+    margin-bottom: 1.2rem;
+    padding: 0.8rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reading-mega-group:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+}
+
+.reading-mega-group .group-header h5 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #10B981 0%, #06B6D4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 0.3rem 0;
+    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.3));
+}
+
+.reading-mega-group .group-skill {
+    font-size: 0.72rem;
+    color: rgba(16, 185, 129, 0.75);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+.reading-mega-group .mega-list li {
+    transition: all 0.3s ease;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    margin: 0.2rem 0;
+}
+
+.reading-mega-group .mega-list li:hover {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+/* ========================================
+   SPEAKING GROUP - Orange Theme
+   ======================================== */
+.speaking-group {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(251, 146, 60, 0.05) 100%) !important;
+    border: 1px solid rgba(249, 115, 22, 0.15) !important;
+}
+
+.speaking-group:hover {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.12) 0%, rgba(251, 146, 60, 0.08) 100%) !important;
+    border-color: rgba(249, 115, 22, 0.3) !important;
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.1) !important;
+}
+
+.speaking-group .group-header h5 {
+    background: linear-gradient(135deg, #F97316 0%, #FB923C 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.3)) !important;
+}
+
+.speaking-group .group-skill {
+    color: rgba(249, 115, 22, 0.75) !important;
+}
+
+.speaking-group .mega-list li:hover {
+    background: rgba(249, 115, 22, 0.1) !important;
+    color: #F97316 !important;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* ========================================
+   WRITING GROUP - Blue Theme
+   ======================================== */
+.writing-group {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(96, 165, 250, 0.05) 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+}
+
+.writing-group:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(96, 165, 250, 0.08) 100%) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1) !important;
+}
+
+.writing-group .group-header h5 {
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.3)) !important;
+}
+
+.writing-group .group-skill {
+    color: rgba(59, 130, 246, 0.75) !important;
+}
+
+.writing-group .mega-list li:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3B82F6 !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* ========================================
+   LISTENING GROUP - Dark Blue Theme
+   ======================================== */
+.listening-group {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.08) 0%, rgba(37, 99, 235, 0.05) 100%) !important;
+    border: 1px solid rgba(30, 64, 175, 0.15) !important;
+}
+
+.listening-group:hover {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.12) 0%, rgba(37, 99, 235, 0.08) 100%) !important;
+    border-color: rgba(30, 64, 175, 0.3) !important;
+    box-shadow: 0 4px 16px rgba(30, 64, 175, 0.1) !important;
+}
+
+.listening-group .group-header h5 {
+    background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    filter: drop-shadow(0 0 6px rgba(30, 64, 175, 0.3)) !important;
+}
+
+.listening-group .group-skill {
+    color: rgba(30, 64, 175, 0.75) !important;
+}
+
+.listening-group .mega-list li:hover {
+    background: rgba(30, 64, 175, 0.1) !important;
+    color: #1E40AF !important;
+    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.15) !important;
+}

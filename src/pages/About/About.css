@@ -1,0 +1,25 @@
+.about-page {
+    padding: 6rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.about-header .subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+}
+
+.about-section h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-red);
+}
