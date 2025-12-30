@@ -1,0 +1,367 @@
+/* DrillDown.css - Antigravity Glassmorphism Drill-Down */
+
+:root {
+    --reading-glow: #10B981;
+    --speaking-glow: #F97316;
+    --writing-glow: #3B82F6;
+    --listening-glow: #1E40AF;
+    --predict-glow: #EF4444;
+    --purple-glow: #8B5CF6;
+}
+
+.drill-down-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(2, 6, 12, 0.9);
+    backdrop-filter: blur(25px);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: overlayFadeIn 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(25px);
+    }
+}
+
+.drill-down-content {
+    width: 100%;
+    max-width: 1100px;
+    height: 85vh;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 40px;
+    position: relative;
+    box-shadow:
+        0 50px 100px rgba(0, 0, 0, 0.5),
+        inset 0 0 40px rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: antigravityExpand 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes antigravityExpand {
+    0% {
+        transform: scale(0.95) translateY(60px);
+        opacity: 0;
+        filter: blur(30px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* Header Styling */
+.drill-down-header {
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-skill-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.skill-icon-large {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+}
+
+.drill-down-header h2 {
+    font-size: 2.4rem;
+    font-weight: 950;
+    letter-spacing: -1px;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #94A3B8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.drill-subtitle {
+    color: #94A3B8;
+    margin: 4px 0 0 0;
+    font-size: 1rem;
+}
+
+/* Stats Bar */
+.drill-stats-bar {
+    display: flex;
+    gap: 3rem;
+    padding: 1.5rem 3rem;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.drill-stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.drill-stat-item .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748B;
+}
+
+.drill-stat-item .value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #F8FAFC;
+}
+
+/* List & Items */
+.question-bank-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.question-bank-item {
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.float-item {
+    animation: floatDrift 8s infinite ease-in-out;
+}
+
+@keyframes floatDrift {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.question-bank-item:hover {
+    transform: scale(1.02) translateY(-10px);
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.q-icon-wrapper-neon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s;
+}
+
+.question-bank-item:hover .q-icon-wrapper-neon {
+    transform: rotate(-10deg) scale(1.1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.q-info {
+    flex: 1;
+}
+
+.q-title-premium {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    margin-bottom: 6px;
+}
+
+.q-meta-glow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: #94A3B8;
+}
+
+.q-id-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.q-action-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.difficulty-badge-neon {
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-weight: 900;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.difficulty-badge-neon.medium {
+    background: rgba(34, 211, 238, 0.05);
+    color: #22D3EE;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.difficulty-badge-neon.hard {
+    background: rgba(139, 92, 246, 0.05);
+    color: #8B5CF6;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.q-preview-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.question-bank-item:hover .q-preview-btn {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+/* Footer */
+.drill-down-footer {
+    padding: 2rem 3rem;
+    background: rgba(2, 6, 12, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer-hint {
+    color: #94A3B8;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.start-practice-btn-glow {
+    padding: 1rem 2.5rem;
+    border-radius: 16px;
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+}
+
+.start-practice-btn-glow:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Skill Specific Theming */
+.drill-down-overlay[data-skill="reading"] .question-bank-item:hover {
+    border-color: var(--reading-glow);
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15);
+}
+
+.drill-down-overlay[data-skill="speaking"] .question-bank-item:hover {
+    border-color: var(--speaking-glow);
+    box-shadow: 0 15px 30px rgba(249, 115, 22, 0.15);
+}
+
+.drill-down-overlay[data-skill="writing"] .question-bank-item:hover {
+    border-color: var(--writing-glow);
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.15);
+}
+
+.drill-down-overlay[data-skill="listening"] .question-bank-item:hover {
+    border-color: var(--listening-glow);
+    box-shadow: 0 15px 30px rgba(30, 64, 175, 0.15);
+}
+
+.drill-down-overlay[data-skill="predictions"] .question-bank-item:hover {
+    border-color: var(--predict-glow);
+    box-shadow: 0 15px 30px rgba(239, 68, 68, 0.15);
+}
+
+.drill-down-overlay[data-skill="reading"] .difficulty-badge-neon.hard {
+    color: var(--reading-glow);
+    border-color: var(--reading-glow);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.close-drill-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.close-drill-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #EF6C00;
+    transform: rotate(90deg);
+}

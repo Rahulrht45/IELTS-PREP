@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './index.css';
 
 // Components
@@ -18,13 +18,18 @@ import Contact from './pages/Contact/Contact';
 import Pricing from './pages/Pricing/Pricing';
 import Practice from './pages/Practice/Practice';
 import PracticeTest from './pages/Practice/PracticeTest';
+import ReadingTest from './pages/Practice/ReadingTest';
+import VocabBank from './pages/Vocab/VocabBank';
+
 
 import Dashboard from './pages/Dashboard/Dashboard';
+import AiClassifier from './components/AiClassifier';
 import { supabase } from './config/supabaseClient';
 import SupabaseExample from './components/SupabaseExample';
 import AdminPanel from './pages/Admin/AdminPanel';
 
 function App() {
+  const navigate = useNavigate();
   const [session, setSession] = useState(null)
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -61,39 +66,40 @@ function App() {
 
   if (session) {
     return (
-      <Router>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={
-              <Dashboard
-                user={session.user}
-                onSignOut={() => setSession(null)}
-                currentTheme={theme}
-                onToggleTheme={toggleTheme}
-              />
-            } />
-            <Route path="/dashboard" element={
-              <Dashboard
-                user={session.user}
-                onSignOut={() => setSession(null)}
-                currentTheme={theme}
-                onToggleTheme={toggleTheme}
-              />
-            } />
-            <Route path="/pricing" element={
-              <Pricing
-                currentTheme={theme}
-                onToggleTheme={toggleTheme}
-                onBackToDashboard={() => window.location.href = '/dashboard'}
-              />
-            } />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/supabase-test" element={<SupabaseExample />} />
-            <Route path="/practice" element={<Practice />} />
-            <Route path="/practice/:id" element={<PracticeTest />} />
-          </Routes>
-        </div>
-      </Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={
+            <Dashboard
+              user={session.user}
+              onSignOut={() => setSession(null)}
+              currentTheme={theme}
+              onToggleTheme={toggleTheme}
+            />
+          } />
+          <Route path="/dashboard" element={
+            <Dashboard
+              user={session.user}
+              onSignOut={() => setSession(null)}
+              currentTheme={theme}
+              onToggleTheme={toggleTheme}
+            />
+          } />
+          <Route path="/pricing" element={
+            <Pricing
+              currentTheme={theme}
+              onToggleTheme={toggleTheme}
+              onBackToDashboard={() => navigate('/dashboard')}
+            />
+          } />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/supabase-test" element={<SupabaseExample />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/practice/:id" element={<PracticeTest />} />
+          <Route path="/reading-test/:id" element={<ReadingTest />} />
+          <Route path="/ai-classifier" element={<AiClassifier />} />
+          <Route path="/vocab" element={<VocabBank />} />
+        </Routes>
+      </div>
     )
   }
 
@@ -136,36 +142,35 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        <Header
-          onSignInClick={() => setShowLogin(true)}
-          onGetStartedClick={() => setShowRegister(true)}
-          currentTheme={theme}
-          onToggleTheme={toggleTheme}
-        />
+    <div className="App">
+      <Header
+        onSignInClick={() => setShowLogin(true)}
+        onGetStartedClick={() => setShowRegister(true)}
+        currentTheme={theme}
+        onToggleTheme={toggleTheme}
+      />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home onRegisterClick={() => setShowRegister(true)} />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/mock-tests" element={<MockTests />} />
-            <Route path="/help-center" element={<HelpCenter />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/pricing" element={<Pricing currentTheme={theme} onToggleTheme={toggleTheme} />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/supabase-test" element={<SupabaseExample />} />
-            <Route path="/practice" element={<Practice />} />
-            <Route path="/practice/:id" element={<PracticeTest />} />
-          </Routes>
-        </main>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home onRegisterClick={() => setShowRegister(true)} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/mock-tests" element={<MockTests />} />
+          <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pricing" element={<Pricing currentTheme={theme} onToggleTheme={toggleTheme} />} />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/supabase-test" element={<SupabaseExample />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/practice/:id" element={<PracticeTest />} />
+          <Route path="/reading-test/:id" element={<ReadingTest />} />
+          <Route path="/ai-classifier" element={<AiClassifier />} />
+        </Routes>
+      </main>
 
-        <Footer />
-      </div>
-    </Router>
+      <Footer />
+    </div>
   );
 }
 
 export default App;
-

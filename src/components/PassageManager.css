@@ -1,0 +1,301 @@
+/* Passage Manager - Theme-Aware Styles */
+
+.passage-manager {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.manager-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.manager-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #06b6d4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.btn-create {
+    padding: 0.8rem 1.75rem;
+    background: linear-gradient(135deg, var(--primary-green) 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Passage Editor */
+.passage-editor {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-xl);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.passage-editor h3 {
+    margin: 0 0 2rem 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: var(--bg-input);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+/* Editor Split Layout */
+.editor-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.passage-live-preview {
+    background: var(--bg-sidebar);
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+.preview-label {
+    padding: 0.6rem 1rem;
+    background: var(--border-light);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.preview-content {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.8;
+    color: var(--text-main);
+    background: var(--bg-card);
+}
+
+.preview-content .exam-passage-header {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    display: block;
+}
+
+.preview-content .exam-lead {
+    font-weight: 800;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+    display: block;
+}
+
+.preview-content .exam-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-blue);
+    color: white !important;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border-radius: 4px;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+.preview-content .exam-highlight {
+    background: rgba(16, 185, 129, 0.15);
+    border-bottom: 2px solid var(--primary-green);
+}
+
+.preview-content .exam-section-letter {
+    font-weight: 900;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    color: var(--primary-blue);
+}
+
+.preview-content p {
+    margin-bottom: 1.2rem;
+}
+
+.rich-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: var(--bg-input);
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+}
+
+.rich-toolbar button {
+    padding: 0.5rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.rich-toolbar button:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* Passage Card */
+.passage-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-sm);
+}
+
+.passage-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-blue);
+}
+
+.passage-header h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.passage-preview {
+    padding: 1.25rem;
+    background: var(--bg-input);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 1.5rem 0;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    background: var(--border-light);
+    color: var(--text-main);
+}
+
+.btn-edit:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .editor-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .passages-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .manager-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}

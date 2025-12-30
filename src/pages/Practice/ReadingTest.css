@@ -1,0 +1,529 @@
+/* Professional IELTS Reading Simulation - Theme-Aware Styles */
+
+.reading-simulation-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+}
+
+/* Header Styling */
+.exam-header {
+    height: 70px;
+    background: var(--bg-sidebar);
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid var(--border-light);
+    z-index: 100;
+}
+
+.exam-brand span {
+    color: var(--primary-blue);
+}
+
+.divider {
+    width: 1px;
+    height: 30px;
+    background: var(--border-light);
+}
+
+.test-type {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+/* Timer */
+.timer-box {
+    background: var(--bg-input);
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+}
+
+.time-remaining {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* Action Buttons */
+.btn-finish-exam {
+    background: var(--primary-green);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    transition: all 0.3s;
+}
+
+.btn-finish-exam:hover {
+    background: var(--primary-green-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Main Workspace */
+.exam-workspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    background: var(--bg-app);
+}
+
+.passage-scroll-pane {
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-main);
+    padding: 4rem;
+    overflow-y: auto;
+}
+
+.questions-scroll-pane {
+    background: var(--bg-app);
+    padding: 4rem;
+    overflow-y: auto;
+}
+
+/* Passage Typography */
+.reading-title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: var(--text-main);
+    margin-bottom: 2.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* --- THEME-FIX: ACADEMIC PASSAGE STYLING --- */
+
+.reading-text-body,
+.reading-text-body * {
+    color: var(--text-main) !important;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+/* Passage 1 / Section A headers */
+.exam-passage-header {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+    display: block;
+}
+
+/* The Bold-Italic Introduction / Leads */
+.exam-lead {
+    font-weight: 800;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--text-main);
+    display: block;
+}
+
+/* Numbered Markers [1], [2] for Question References */
+.exam-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-blue);
+    color: white !important;
+    width: 22px;
+    height: 22px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-radius: 4px;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+/* Highlighted Text in Passage */
+.exam-highlight {
+    background: rgba(16, 185, 129, 0.15);
+    border-bottom: 2px solid var(--primary-green);
+    padding: 2px 0;
+}
+
+/* Section Letters [A], [B] etc */
+.exam-section-letter {
+    font-weight: 900;
+    font-size: 1.4rem;
+    margin-right: 1.5rem;
+    color: var(--primary-blue);
+}
+
+.reading-text-body p {
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+/* --- END ACADEMIC STYLING --- */
+
+/* Question Cards */
+.section-instruction-box {
+    background: var(--bg-sidebar);
+    color: var(--text-main);
+    padding: 1.8rem;
+    border-radius: 16px;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.section-instruction-box h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: var(--primary-blue);
+}
+
+.q-item-card {
+    background: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+}
+
+.q-item-card:hover {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-md);
+}
+
+.q-number-bubble {
+    background: var(--primary-blue);
+    color: white;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.q-statement {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* MCQ Options */
+.mcq-option-label {
+    display: flex;
+    align-items: center;
+    padding: 1.1rem 1.4rem;
+    background: var(--bg-input);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mcq-option-label:hover {
+    background: var(--bg-card);
+    border-color: var(--primary-blue);
+}
+
+.mcq-option-label.selected {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--primary-blue);
+}
+
+.opt-letter {
+    width: 28px;
+    height: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-main);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    margin-right: 1.2rem;
+    color: var(--text-muted);
+}
+
+.mcq-option-label.selected .opt-letter {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+/* Inputs */
+.academic-input {
+    width: 100%;
+    padding: 1.1rem 1.4rem;
+    background: var(--bg-input);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    transition: all 0.3s;
+}
+
+.academic-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Binary Buttons */
+.binary-btn {
+    flex: 1;
+    padding: 1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.binary-btn.active {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+/* --- ACADEMIC QUESTION STYLING --- */
+
+.q-summary-box {
+    border: 1.5px solid var(--text-main);
+    padding: 2rem;
+    margin: 1.5rem 0;
+    background: var(--bg-card);
+    border-radius: 2px;
+    /* Sharp academic edges */
+    color: var(--text-main);
+}
+
+[data-theme='light'] .q-summary-box {
+    background: #fdfdfd;
+}
+
+.q-summary-box h4 {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 1.25rem;
+    text-transform: none;
+    /* Matches the image better than all-caps */
+    color: var(--text-main);
+}
+
+.q-summary-box ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.q-summary-box li {
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-main);
+}
+
+/* Question Markers for Gap Fill */
+.exam-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--border-main);
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 50%;
+    margin: 0 8px;
+    vertical-align: middle;
+}
+
+/* Admin Editor Split View */
+.editor-preview-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.q-preview-live {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.preview-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.preview-body-q {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Live Word Interaction */
+.live-word {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+    display: inline-block;
+    padding: 0 1px;
+}
+
+.live-word:hover {
+    color: var(--primary-blue);
+    background: rgba(59, 130, 246, 0.1);
+    border-bottom: 1px dashed var(--primary-blue);
+    transform: translateY(-1px);
+}
+
+.vocab-context-menu {
+    width: 280px;
+    padding: 0;
+    overflow: hidden;
+    animation: menu-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes menu-pop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -90%) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1);
+    }
+}
+
+.vocab-menu-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.vocab-word {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.vm-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.vm-close:hover {
+    color: #fff;
+}
+
+.vocab-menu-body {
+    padding: 1.2rem;
+}
+
+.vm-definition-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vm-type {
+    font-size: 0.75rem;
+    color: var(--primary-blue);
+    font-style: italic;
+    background: rgba(59, 130, 246, 0.1);
+    align-self: flex-start;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.vm-def {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-main);
+}
+
+.vm-save-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #818cf8 100%);
+    border: none;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.vm-save-btn:hover:not(:disabled) {
+    opacity: 0.9;
+    letter-spacing: 1.5px;
+}
+
+.vm-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.loader-dots {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+.vm-error {
+    color: #f87171;
+    font-size: 0.9rem;
+    text-align: center;
+}

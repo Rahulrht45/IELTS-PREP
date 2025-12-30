@@ -2,49 +2,130 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
 
+/* Universal Theme Fix - Dark & Light Mode */
+@import './theme-fix.css';
+
 /* Ash Gray Theme - Updated */
 
 :root {
   --primary-blue: #3B82F6;
   --primary-blue-hover: #2563EB;
-  --primary-red: #10B981;
-  /* Green Brand Color */
-  --primary-red-hover: #059669;
+  --primary-green: #10B981;
+  --primary-green-hover: #059669;
+  --primary-purple: #8B5CF6;
+  --primary-purple-hover: #7C3AED;
 
-  /* Light Theme Variables (Default) - Stronger Ash Theme */
-  --text-dark: #1E293B;
-  --text-muted: #475569;
-  --bg-color: #E2E8F0;
-  /* Slate 200 - Distinct Ash */
-  --white: #FFFFFF;
-  /* Keep cards white for pop */
-  --border-color: #CBD5E1;
-  --focus-ring: rgba(59, 130, 246, 0.4);
+  /* Text Colors - Light Theme */
+  --text-main: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --text-inverse: #FFFFFF;
 
-  /* Dark Mode Variables - will be overridden */
-  --bg-dark: #0F172A;
-  --card-dark: #1E293B;
-  --text-light: #F8FAFC;
+  /* Backgrounds - Light Theme */
+  --bg-app: #F1F5F9;
+  --bg-card: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-sidebar: #F8FAFC;
+
+  /* Glass Effects - Light Theme */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+  /* Borders & Dividers */
+  --border-main: #E2E8F0;
+  --border-light: rgba(0, 0, 0, 0.05);
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="dark"] {
-  --text-dark: #F8FAFC;
+  /* Text Colors - Dark Theme */
+  --text-main: #F8FAFC;
+  --text-secondary: #CBD5E1;
   --text-muted: #94A3B8;
-  --bg-color: #0F172A;
-  /* Dark Section Background */
-  --white: #1E293B;
-  /* Dark Card Background */
-  --border-color: #334155;
-  --primary-blue: #60A5FA;
-  /* Lighter blue for dark mode */
+  --text-inverse: #0F172A;
+
+  /* Backgrounds - Dark Theme */
+  --bg-app: #0F172A;
+  --bg-card: rgba(30, 41, 59, 0.7);
+  --bg-input: rgba(15, 23, 42, 0.5);
+  --bg-sidebar: rgba(15, 23, 42, 0.8);
+
+  /* Glass Effects - Dark Theme */
+  --glass-bg: rgba(30, 41, 59, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Borders & Dividers */
+  --border-main: #334155;
+  --border-light: rgba(255, 255, 255, 0.05);
+
+  /* Elevation Overrides */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Academic Formatting Utilities */
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-justify {
+  text-align: justify !important;
+}
+
+.text-indent {
+  text-indent: 40px !important;
+}
+
+.font-italic {
+  font-style: italic !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.block {
+  display: block !important;
+}
+
+.mt-1 {
+  margin-top: 0.5rem !important;
+}
+
+.mt-2 {
+  margin-top: 1rem !important;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem !important;
+}
+
+.mb-2 {
+  margin-bottom: 1rem !important;
 }
 
 /* Base Body Styles */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
-  /* Was var(--white) but bg-color is better for main bg */
-  color: var(--text-dark);
+  background-color: var(--bg-app);
+  color: var(--text-main);
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -55,45 +136,28 @@ h4,
 h5,
 h6 {
   font-family: 'Outfit', sans-serif;
-  color: var(--text-dark);
+  color: var(--text-main);
 }
 
 .header {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--glass-border);
   position: sticky;
   top: 1.5rem;
-  /* Floating effect */
   z-index: 1000;
-  /* Ensure on top */
-  box-shadow:
-    0 10px 30px -10px rgba(0, 0, 0, 0.05),
-    0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--glass-shadow);
   border-radius: 99px;
-  /* Pill shape */
   max-width: 1200px;
   margin: 0 auto 2rem auto;
-  /* Center it */
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .header.scrolled {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-xl);
   transform: translateY(-5px);
-}
-
-[data-theme="dark"] .header {
-  background: rgba(15, 23, 42, 0.6);
-  /* Darker glass */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  /* Subtle highlight border */
-  box-shadow:
-    0 20px 50px -12px rgba(0, 0, 0, 0.5),
-    /* Deep dark shadow */
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .header-container {

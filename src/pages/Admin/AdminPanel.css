@@ -1,173 +1,177 @@
-/* Admin Panel Container - Glassmorphism & Gradient */
+/* Admin Panel Container - Glassmorphism & Theme-Aware */
 .admin-panel-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 3rem auto;
     padding: 3rem;
-    background: rgba(15, 23, 42, 0.6);
-    /* Dark slate with transparency */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    color: #e2e8f0;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: var(--shadow-xl);
+    color: var(--text-main);
     position: relative;
     overflow: hidden;
-    animation: fadeIn 0.6s ease-out;
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Subtle background glow effect */
-.admin-panel-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
+/* Tab Navigation */
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 0.4rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
 }
 
-/* Typography */
-.admin-panel-container h1 {
-    text-align: center;
+.tab-btn {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.tab-btn:hover {
+    background: var(--border-light);
+    color: var(--text-main);
+}
+
+.tab-btn.active {
+    background: var(--bg-card);
+    color: var(--primary-green);
+    box-shadow: var(--shadow-sm);
+    font-weight: 700;
+}
+
+/* Specific Input Tweaks */
+.instructions-input,
+.url-input {
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.9rem !important;
+    background: var(--bg-input) !important;
+    border-color: var(--glass-border) !important;
+    color: var(--text-main) !important;
+}
+
+/* Admin Header */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2.5rem;
-    font-size: 2.5rem;
+    gap: 2rem;
+}
+
+.admin-panel-container h1 {
+    margin: 0;
+    font-size: 2.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    background: linear-gradient(135deg, var(--primary-green) 0%, #34D399 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
 }
 
-/* Form Layout */
-.admin-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
+/* Form Groups */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-group label {
-    color: #94a3b8;
-    font-size: 0.9rem;
-    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-left: 0.2rem;
 }
 
-/* Inputs & Selects with Neon Focus */
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 1rem 1.25rem;
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.875rem 1.25rem;
+    background: var(--bg-input);
+    border: 1px solid var(--glass-border);
     border-radius: 12px;
-    color: #f1f5f9;
-    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    font-family: inherit;
     font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #10B981;
-    background: rgba(16, 185, 129, 0.05);
+    border-color: var(--primary-green);
     box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-    transform: translateY(-1px);
 }
 
-/* Select Dropdown Styling */
-.form-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1.2rem;
-    cursor: pointer;
+/* Choice Option Layouts */
+.options-admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
-.form-group select option {
-    background-color: #0f172a;
-    color: #e2e8f0;
-}
-
-/* Textarea resizing */
-.form-group textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-/* Option Inputs */
-.option-input {
-    margin-bottom: 0.75rem;
-}
-
-/* Submit Button - Neon Glow */
+/* Buttons */
 .submit-btn {
-    margin-top: 1.5rem;
-    padding: 1.2rem;
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: #ffffff;
+    padding: 1.1rem;
+    background: var(--primary-green);
+    color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    border-radius: 14px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 20px rgba(16, 185, 129, 0.4);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 
 .submit-btn:hover:not(:disabled) {
+    background: var(--primary-green-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 30px rgba(16, 185, 129, 0.6);
-    filter: brightness(1.1);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
-.submit-btn:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.submit-btn:disabled {
-    background: #334155;
-    color: #94a3b8;
-    cursor: not-allowed;
-    box-shadow: none;
+.ai-classifier-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-purple) 0%, #06B6D4 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 /* Messages */
 .message {
     padding: 1rem;
     border-radius: 12px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-align: center;
-    font-weight: 500;
-    animation: slideIn 0.3s ease-out;
+    font-weight: 600;
 }
 
 .message.success {
     background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
     border: 1px solid rgba(16, 185, 129, 0.2);
-    color: #34D399;
 }
 
 .message.error {
     background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
     border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #F87171;
 }
 
 /* Animations */
@@ -213,3 +217,419 @@ textarea::-webkit-scrollbar-thumb {
 textarea::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* Audio URL Input */
+.audio-url-input {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: #f1f5f9;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.audio-url-input:focus {
+    border-color: #8B5CF6;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    outline: none;
+}
+
+.audio-url-input::placeholder {
+    color: #64748b;
+}
+
+/* Audio Preview in Admin */
+.audio-preview-admin {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+}
+
+.audio-preview-admin audio {
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* Builder Layout */
+.builder-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+    margin-top: 1rem;
+}
+
+.builder-sidebar {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.builder-sidebar h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #10B981;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.passage-select {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 10px;
+    color: white;
+}
+
+.linked-questions-panel {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1.5rem;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.panel-header h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.preview-btn-sm {
+    padding: 0.4rem 0.8rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    color: #10B981;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preview-btn-sm:hover {
+    background: #10B981;
+    color: white;
+}
+
+.question-mini-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.mini-q-item {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.75rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.mini-q-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.mini-q-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.mini-q-actions button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 0;
+}
+
+.mini-q-actions button:hover:not(:disabled) {
+    background: #10B981;
+    color: white;
+    border-color: #10B981;
+}
+
+.mini-q-actions button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.q-num {
+    background: #111827;
+    color: #10B981;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.q-type-badge {
+    font-size: 0.65rem;
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.q-preview-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-in-builder {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.form-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.options-admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.submit-btn-builder {
+    margin-top: 1rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 20px rgba(16, 185, 129, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: 100%;
+}
+
+.submit-btn-builder:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 0 30px rgba(16, 185, 129, 0.6);
+    filter: brightness(1.1);
+}
+
+.submit-btn-builder:disabled {
+    background: #334155;
+    color: #64748b;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+@media (max-width: 1024px) {
+    .builder-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .builder-sidebar {
+        position: static;
+    }
+
+    .editor-preview-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Rich Toolbar */
+.rich-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.rich-toolbar button {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.rich-toolbar button:hover {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+/* --- ACADEMIC QUESTION STYLING (Shared with Exam) --- */
+.q-summary-box {
+    border: 2px solid var(--text-main);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    background: var(--bg-card);
+    border-radius: 4px;
+}
+
+.q-summary-box h4 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+
+.q-summary-box ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.q-summary-box li {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.exam-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-main);
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 50%;
+    margin: 0 6px;
+    vertical-align: middle;
+}
+
+.exam-gap-display {
+    display: inline-block;
+    border-bottom: 1px solid var(--text-main);
+    min-width: 80px;
+    margin: 0 4px;
+    vertical-align: bottom;
+    color: transparent;
+    /* Hide underscores visually, show underline */
+}
+
+/* Admin Editor Split View */
+.editor-preview-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.q-preview-live {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.preview-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+}
+
+.preview-body-q {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+}
+
+@media (max-width: 1024px) {
+    .builder-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .builder-sidebar {
+        position: static;
+    }
+}
+/* Recycle Bin Styles */
+.btn-del-mini {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px 6px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.btn-del-mini:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.recycle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.passage-badge {
+    background: #8b5cf6 !important; /* Purple for Passages */
+    color: white !important;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+

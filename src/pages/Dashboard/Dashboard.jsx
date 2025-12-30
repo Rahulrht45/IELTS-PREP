@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import './Dashboard.css';
 import './ReadingGroups.css';
+import './DrillDown.css';
 import logo from '../../assets/images/logo.png';
 import rahulProfile from '../../assets/images/rahul.png';
 import { supabase } from '../../config/supabaseClient';
@@ -10,10 +11,12 @@ import ExamCountdownModal from '../../components/ExamCountdownModal';
 
 const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isProgCollapsed, setIsProgCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'practice');
     const [isPracticeMenuOpen, setIsPracticeMenuOpen] = useState(false);
     const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
+    const [activeDrillDown, setActiveDrillDown] = useState(null);
 
     // Exam Countdown Logic
     const [isCountdownModalOpen, setIsCountdownModalOpen] = useState(false);
@@ -132,6 +135,35 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
     }, [isPracticeMenuOpen]);
 
 
+    const navigateToCategory = async (skill, category) => {
+        setIsPracticeMenuOpen(false);
+        try {
+            // Smart Navigation: Find the first question in this category to start practice instantly
+            const { data, error } = await supabase
+                .from('questions')
+                .select('id')
+                .eq('section', skill)
+                .limit(1);
+
+            if (data && data.length > 0) {
+                // Navigate directly to the first question and signal to open the drawer
+                navigate(`/practice/${data[0].id}`, {
+                    state: {
+                        openDrawer: true,
+                        skillFilter: skill,
+                        categoryTitle: category
+                    }
+                });
+            } else {
+                // Fallback to library if no questions available
+                navigate('/practice', { state: { filter: skill, catFilter: category } });
+            }
+        } catch (err) {
+            console.error("Navigation error:", err);
+            navigate('/practice', { state: { filter: skill, catFilter: category } });
+        }
+    };
+
     return (
         <div className="adv-dashboard-container" data-theme={currentTheme}>
             {/* Top Navbar */}
@@ -140,7 +172,7 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                     <img src={logo} alt="Logo" className="nav-logo" />
                     <span className="nav-brand">IELTS Master</span>
                     <div className="nav-links">
-                        <a href="#home">Home</a>
+                        <Link to="/dashboard">Home</Link>
                         <div className={`nav-item-dropdown ${isPracticeMenuOpen ? 'open' : ''}`}>
                             <a
                                 href="#practice"
@@ -155,27 +187,22 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                             <div className="mega-menu">
                                 <div className="mega-menu-content">
                                     <div className="mega-col speaking">
-                                        <div className="col-header">
+                                        <div className="col-header" onClick={() => navigateToCategory('Speaking', null)}>
                                             <span className="col-icon">🎙️</span>
                                             <h4>Speaking</h4>
                                         </div>
                                         <div className="reading-mega-groups">
-                                            {/* Part 1: Introduction & Interview */}
-                                            <div className="reading-mega-group speaking-group">
+                                            <div className="reading-mega-group speaking-group" onClick={() => navigateToCategory('Speaking', 'Part 1: Introduction')}>
                                                 <div className="group-header">
                                                     <h5>Part 1: Introduction</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Part 2: Long Turn (Cue Card) */}
-                                            <div className="reading-mega-group speaking-group">
+                                            <div className="reading-mega-group speaking-group" onClick={() => navigateToCategory('Speaking', 'Part 2: Cue Card')}>
                                                 <div className="group-header">
                                                     <h5>Part 2: Cue Card</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Part 3: Discussion */}
-                                            <div className="reading-mega-group speaking-group">
+                                            <div className="reading-mega-group speaking-group" onClick={() => navigateToCategory('Speaking', 'Part 3: Discussion')}>
                                                 <div className="group-header">
                                                     <h5>Part 3: Discussion</h5>
                                                 </div>
@@ -183,27 +210,22 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         </div>
                                     </div>
                                     <div className="mega-col writing">
-                                        <div className="col-header">
+                                        <div className="col-header" onClick={() => navigateToCategory('Writing', null)}>
                                             <span className="col-icon">✍️</span>
                                             <h4>Writing</h4>
                                         </div>
                                         <div className="reading-mega-groups">
-                                            {/* Task 1: Academic */}
-                                            <div className="reading-mega-group writing-group">
+                                            <div className="reading-mega-group writing-group" onClick={() => navigateToCategory('Writing', 'Task 1: Academic')}>
                                                 <div className="group-header">
                                                     <h5>Task 1: Academic</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Task 1: General Training */}
-                                            <div className="reading-mega-group writing-group">
+                                            <div className="reading-mega-group writing-group" onClick={() => navigateToCategory('Writing', 'Task 1: General')}>
                                                 <div className="group-header">
                                                     <h5>Task 1: General</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Task 2: Essay Writing */}
-                                            <div className="reading-mega-group writing-group">
+                                            <div className="reading-mega-group writing-group" onClick={() => navigateToCategory('Writing', 'Task 2: Essay')}>
                                                 <div className="group-header">
                                                     <h5>Task 2: Essay</h5>
                                                 </div>
@@ -211,41 +233,32 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         </div>
                                     </div>
                                     <div className="mega-col reading">
-                                        <div className="col-header">
+                                        <div className="col-header" onClick={() => navigateToCategory('Reading', null)}>
                                             <span className="col-icon">📖</span>
                                             <h4>Reading</h4>
                                         </div>
                                         <div className="reading-mega-groups">
-                                            {/* Group 1: Multiple Choice */}
-                                            <div className="reading-mega-group">
+                                            <div className="reading-mega-group" onClick={() => navigateToCategory('Reading', 'Multiple Choice')}>
                                                 <div className="group-header">
                                                     <h5>Multiple Choice</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Group 2: True/False Assessment */}
-                                            <div className="reading-mega-group">
+                                            <div className="reading-mega-group" onClick={() => navigateToCategory('Reading', 'True/False Assessment')}>
                                                 <div className="group-header">
                                                     <h5>True/False Assessment</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Group 3: Matching Tasks */}
-                                            <div className="reading-mega-group">
+                                            <div className="reading-mega-group" onClick={() => navigateToCategory('Reading', 'Matching Tasks')}>
                                                 <div className="group-header">
                                                     <h5>Matching Tasks</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Group 4: Completion Tasks */}
-                                            <div className="reading-mega-group">
+                                            <div className="reading-mega-group" onClick={() => navigateToCategory('Reading', 'Completion Tasks')}>
                                                 <div className="group-header">
                                                     <h5>Completion Tasks</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Group 5: Short Answers */}
-                                            <div className="reading-mega-group">
+                                            <div className="reading-mega-group" onClick={() => navigateToCategory('Reading', 'Short Answers')}>
                                                 <div className="group-header">
                                                     <h5>Short Answers</h5>
                                                 </div>
@@ -253,41 +266,32 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         </div>
                                     </div>
                                     <div className="mega-col listening">
-                                        <div className="col-header">
+                                        <div className="col-header" onClick={() => navigateToCategory('Listening', null)}>
                                             <span className="col-icon">🎧</span>
                                             <h4>Listening</h4>
                                         </div>
                                         <div className="reading-mega-groups">
-                                            {/* Section 1: Everyday Conversation */}
-                                            <div className="reading-mega-group listening-group">
+                                            <div className="reading-mega-group listening-group" onClick={() => navigateToCategory('Listening', 'Section 1: Conversation')}>
                                                 <div className="group-header">
                                                     <h5>Section 1: Conversation</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Section 2: Monologue */}
-                                            <div className="reading-mega-group listening-group">
+                                            <div className="reading-mega-group listening-group" onClick={() => navigateToCategory('Listening', 'Section 2: Monologue')}>
                                                 <div className="group-header">
                                                     <h5>Section 2: Monologue</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Section 3: Academic Discussion */}
-                                            <div className="reading-mega-group listening-group">
+                                            <div className="reading-mega-group listening-group" onClick={() => navigateToCategory('Listening', 'Section 3: Discussion')}>
                                                 <div className="group-header">
                                                     <h5>Section 3: Discussion</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Section 4: Academic Lecture */}
-                                            <div className="reading-mega-group listening-group">
+                                            <div className="reading-mega-group listening-group" onClick={() => navigateToCategory('Listening', 'Section 4: Lecture')}>
                                                 <div className="group-header">
                                                     <h5>Section 4: Lecture</h5>
                                                 </div>
                                             </div>
-
-                                            {/* Question Types */}
-                                            <div className="reading-mega-group listening-group">
+                                            <div className="reading-mega-group listening-group" onClick={() => navigateToCategory('Listening', 'Multiple Choice')}>
                                                 <div className="group-header">
                                                     <h5>Question Types</h5>
                                                 </div>
@@ -310,18 +314,20 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                 </div>
                             </div>
                         </div>
-                        <a href="#hiate">Hiate</a>
-                        <a href="/pricing">Buy</a>
-                        <a href="/practice" className="nav-link">Library</a>
-                        <a href="#resources">Resources</a>
-                        <a href="/admin" className="nav-admin-btn">Admin Panel</a>
+                        <Link to="/dashboard">Hiate</Link>
+                        <Link to="/pricing">Buy</Link>
+                        <Link to="/practice" className="nav-link">Library</Link>
+                        <Link to="/dashboard">Resources</Link>
+                        <Link to="/admin" className="nav-admin-btn">Admin Panel</Link>
                     </div>
                 </div>
                 <div className="nav-right">
                     <div className="nav-search">
-                        <input type="text" placeholder="Search" />
-                        <span className="search-icon">🔍</span>
+                        <input type="text" placeholder="Search resources..." />
+                        <span>🔍</span>
                     </div>
+
+
                     <button onClick={onToggleTheme} className="theme-toggle">
                         {currentTheme === 'dark' ? '☀️' : '🌙'}
                     </button>
@@ -349,13 +355,18 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
 
                 <div className="analytics-card-row">
                     {[
-                        { num: '1470', label: 'Prediction Questions', color: '#EF4444', percent: '0%' },
-                        { num: '8817', label: 'Speaking Questions', color: '#F97316', percent: '0%' },
-                        { num: '891', label: 'Writing Questions', color: '#3B82F6', percent: '0%' },
-                        { num: '3428', label: 'Reading Questions', color: '#10B981', percent: '0%' },
-                        { num: '5898', label: 'Listening Questions', color: '#1E40AF', percent: '0%' }
+                        { num: '1470', label: 'Prediction Questions', color: '#EF4444', percent: '0%', drill: 'Predictions' },
+                        { num: '8817', label: 'Speaking Questions', color: '#F97316', percent: '0%', drill: 'Speaking' },
+                        { num: '891', label: 'Writing Questions', color: '#3B82F6', percent: '0%', drill: 'Writing' },
+                        { num: '0', label: 'Reading Questions', color: '#10B981', percent: '0%', drill: 'Reading' },
+                        { num: '5898', label: 'Listening Questions', color: '#1E40AF', percent: '0%', drill: 'Listening' }
                     ].map((stat, i) => (
-                        <div key={i} className="analytics-stat-card">
+                        <div
+                            key={i}
+                            className={`analytics-stat-card ${stat.drill ? 'clickable-stat' : ''}`}
+                            onClick={() => stat.drill && setActiveDrillDown(stat.drill)}
+                            style={{ cursor: stat.drill ? 'pointer' : 'default' }}
+                        >
                             <div className="stat-main">
                                 <span className="stat-number" style={{ color: stat.color }}>{stat.num}</span>
                                 <span className="stat-percent-pill" style={{ backgroundColor: stat.color + '15', color: stat.color }}>
@@ -464,7 +475,6 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                             { l: 'Describe Image', v: '0/1173' },
                                             { l: 'Re-Tell Lecture', v: '0/575' },
                                             { l: 'Answer Short Question', v: '0/1926' },
-                                            { l: 'Summarize Group Discussion', v: '0/181' },
                                             { l: 'Respond to a Situation', v: '0/258' }
                                         ].map((item, i) => (
                                             <div key={i} className="prog-item">
@@ -493,13 +503,6 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                             </div>
                                         ))}
 
-                                        {/* Mock Tests (Moved under Writing or separate?) 
-                                           The prompt asked for Speaking, Writing, Reading, Listening. 
-                                           I will put Mock Tests at the bottom of Writing for now to balance, 
-                                           or maybe strictly 4 cols? 
-                                           The prompt says "Four-column layout: Speaking, Writing, Reading, Listening". 
-                                           It doesn't mention Mock Tests. I'll keep them in Writing column to avoid losing them.
-                                        */}
                                         <div className="prog-section red" style={{ marginTop: '2rem' }}>
                                             <h4 className="prog-title">Mock Tests</h4>
                                             {[
@@ -523,54 +526,24 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         {[
                                             {
                                                 group: 'Multiple Choice',
-                                                desc: 'Choose the correct answer',
-                                                items: [
-                                                    { l: 'Single Answer Questions', v: '0/250' },
-                                                    { l: 'Multiple Answer Questions', v: '0/180' },
-                                                    { l: 'Sentence Ending Match', v: '0/150' }
-                                                ]
+                                                items: [{ l: 'Single Answer', v: '0/250' }, { l: 'Multiple Answer', v: '0/180' }]
                                             },
                                             {
-                                                group: 'True/False Assessment',
-                                                desc: 'Verify statement accuracy',
-                                                items: [
-                                                    { l: 'True / False / Not Given', v: '0/300' },
-                                                    { l: 'Yes / No / Not Given', v: '0/280' }
-                                                ]
+                                                group: 'True/False',
+                                                items: [{ l: 'True/False/NG', v: '0/300' }, { l: 'Yes/No/NG', v: '0/280' }]
                                             },
                                             {
-                                                group: 'Matching Tasks',
-                                                desc: 'Connect related information',
-                                                items: [
-                                                    { l: 'Heading Matching', v: '0/210' },
-                                                    { l: 'Information Matching', v: '0/190' },
-                                                    { l: 'Feature Matching', v: '0/160' }
-                                                ]
+                                                group: 'Matching',
+                                                items: [{ l: 'Headings', v: '0/210' }, { l: 'Information', v: '0/190' }]
                                             },
                                             {
-                                                group: 'Completion Tasks',
-                                                desc: 'Fill in missing information',
-                                                items: [
-                                                    { l: 'Sentence Completion', v: '0/220' },
-                                                    { l: 'Summary Completion', v: '0/240' },
-                                                    { l: 'Note Completion', v: '0/150' },
-                                                    { l: 'Table Completion', v: '0/130' },
-                                                    { l: 'Flowchart Completion', v: '0/110' },
-                                                    { l: 'Diagram Labeling', v: '0/90' }
-                                                ]
-                                            },
-                                            {
-                                                group: 'Short Answers',
-                                                desc: 'Provide brief responses',
-                                                items: [
-                                                    { l: 'Short Answer Questions', v: '0/170' }
-                                                ]
+                                                group: 'Completion',
+                                                items: [{ l: 'Sentence', v: '0/220' }, { l: 'Summary', v: '0/240' }]
                                             }
                                         ].map((grp, i) => (
                                             <div key={i} className="reading-group-block">
                                                 <div className="r-group-header">
                                                     <h5 className="r-group-title">{grp.group}</h5>
-                                                    <span className="r-group-desc">{grp.desc}</span>
                                                 </div>
                                                 {grp.items.map((item, idx) => (
                                                     <div key={idx} className="prog-item">
@@ -590,12 +563,9 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         <h4 className="prog-title">Listening</h4>
                                         {[
                                             { l: 'Summarize Spoken Text', v: '0/641' },
-                                            { l: 'Multiple Choice, Single Answer', v: '0/204' },
                                             { l: 'Fill in the Blanks', v: '0/417' },
-                                            { l: 'Highlight Correct Summary', v: '0/153' },
-                                            { l: 'Multiple Choice, Multiple Answers', v: '0/193' },
-                                            { l: 'Select Missing Word', v: '0/204' },
-                                            { l: 'Highlight Incorrect Words', v: '0/513' },
+                                            { l: 'Multiple Choice Qs', v: '0/400' },
+                                            { l: 'Highlight Incorrect', v: '0/513' },
                                             { l: 'Write from Dictation', v: '0/3573' }
                                         ].map((item, i) => (
                                             <div key={i} className="prog-item">
@@ -638,16 +608,11 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                         <svg className="chart-svg" preserveAspectRatio="none" viewBox="0 0 100 100">
                                             <path d="M 0 100 L 100 100" stroke="#10B981" strokeWidth="1" fill="none" />
                                             <circle cx="0" cy="100" r="1.5" fill="#10B981" />
-                                            <circle cx="16.6" cy="100" r="1.5" fill="#10B981" />
-                                            <circle cx="33.3" cy="100" r="1.5" fill="#10B981" />
-                                            <circle cx="50" cy="100" r="1.5" fill="#10B981" />
-                                            <circle cx="66.6" cy="100" r="1.5" fill="#10B981" />
-                                            <circle cx="83.3" cy="100" r="1.5" fill="#10B981" />
                                             <circle cx="100" cy="100" r="1.5" fill="#10B981" />
                                         </svg>
                                     </div>
                                     <div className="chart-x-axis">
-                                        {['21 Dec, 25', '22 Dec, 25', '23 Dec, 25', '24 Dec, 25', '25 Dec, 25', '26 Dec, 25', '27 Dec, 25'].map(date => (
+                                        {['21 Dec', '22 Dec', '23 Dec', '24 Dec', '25 Dec', '26 Dec', '27 Dec'].map(date => (
                                             <span key={date}>{date}</span>
                                         ))}
                                     </div>
@@ -675,23 +640,24 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                         </div>
                     )}
 
-                    {activeTab === 'library' && (
-                        /* Removed Library Tab Content */
-                        null
-                    )}
 
                     <div className="module-grid">
                         {[
                             { title: 'Templates', icon: '📝', color: '#10B981' },
                             { title: 'Predictions', icon: '📹', color: '#06B6D4' },
                             { title: 'Strategy Videos', icon: '💻', color: '#2DD4BF' },
-                            { title: 'Vocab Bank', icon: '📕', color: '#EF4444', badge: '!' },
+                            { title: 'Vocab Bank', icon: '📕', color: '#EF4444', badge: '!', link: '/vocab' },
                             { title: 'Score Feedback', icon: '📊', color: '#1E40AF', badge: 'i' },
                             { title: 'Compatibility', icon: '💻', color: '#F59E0B', badge: 'i' },
                             { title: 'Mock Tests', icon: '📒', color: '#A855F7' },
                             { title: 'MT Scores', icon: '📋', color: '#0EA5E9' }
                         ].map((mod, idx) => (
-                            <div key={idx} className="module-card">
+                            <div
+                                key={idx}
+                                className="module-card"
+                                onClick={() => mod.link && navigate(mod.link)}
+                                style={{ cursor: mod.link ? 'pointer' : 'default' }}
+                            >
                                 <div className="mod-icon-wrapper" style={{ backgroundColor: mod.color + '20' }}>
                                     <span className="mod-icon" style={{ color: mod.color }}>{mod.icon}</span>
                                     {mod.badge && <span className="mod-badge" style={{
@@ -744,7 +710,6 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                     </div>
                 </section>
 
-                {/* Right Section: Sidebar */}
                 <section className="dashboard-right-col">
                     <div className="score-target-widget">
                         <div className="score-box teal">
@@ -784,7 +749,6 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                                     <label className="time-label">Seconds</label>
                                 </div>
                             </div>
-                            {/* Prompt to set date if not set */}
                             {!targetExamDate && (
                                 <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '0.8rem', opacity: 0.7 }}>
                                     Tap ⚙️ to set date
@@ -797,13 +761,13 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                         <div className="cal-header">
                             <h3>Study Plan</h3>
                             <div className="cal-nav">
-                                <span onClick={() => changeMonth(-1)} style={{ cursor: 'pointer' }}>&lt;</span>
+                                <span onClick={() => changeMonth(-1)}>❮</span>
                                 <strong>{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</strong>
-                                <span onClick={() => changeMonth(1)} style={{ cursor: 'pointer' }}>&gt;</span>
+                                <span onClick={() => changeMonth(1)}>❯</span>
                             </div>
                         </div>
                         <div className="cal-grid">
-                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <span key={d} className="cal-day-name">{d}</span>)}
+                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <span key={`${d}-${i}`} className="cal-day-name">{d}</span>)}
                             {renderCalendarDays()}
                         </div>
                     </div>
@@ -816,40 +780,126 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                             <span className="soc-in">in</span>
                             <span className="soc-tg">✈️</span>
                             <span className="soc-x">X</span>
-                            <span className="soc-yt">▶️</span>
+                            <span className="soc-yt">YT</span>
                         </div>
                     </div>
 
-                    <div className="card referral-card">
+                    <div className="referral-card">
                         <div className="ref-header">
                             <h3>Refer & Friend</h3>
-                            <span className="close-x">×</span>
                         </div>
                         <div className="ref-content">
-                            <div className="ref-icon">👤</div>
+                            <div className="ref-icon">🎁</div>
                             <div className="ref-text">
-                                <p><strong>Refer a Friend</strong></p>
-                                <p>Please solve upgrade test of query your Premium Ducking first Study-Plan</p>
+                                <strong>Gift 10% Off</strong>
+                                <p>On their first subscription purchase</p>
                             </div>
                         </div>
                     </div>
                 </section>
-            </div >
+            </div>
 
-            {/* Score Target Modal */}
-            < ScoreTargetModal
-                isOpen={isScoreModalOpen}
-                onClose={() => setIsScoreModalOpen(false)}
-                currentTheme={currentTheme}
-            />
+            {/* Drill Down Overlay */}
+            {activeDrillDown && (
+                <div className="drill-down-overlay" onClick={() => setActiveDrillDown(null)} data-skill={activeDrillDown.toLowerCase()}>
+                    <div className="drill-down-content premium-glass" onClick={(e) => e.stopPropagation()}>
+                        <div className="drill-down-header">
+                            <div className="header-skill-info">
+                                <span className="skill-icon-large">
+                                    {activeDrillDown === 'Reading' && '📖'}
+                                    {activeDrillDown === 'Listening' && '🎧'}
+                                    {activeDrillDown === 'Speaking' && '🎙️'}
+                                    {activeDrillDown === 'Writing' && '✍️'}
+                                    {activeDrillDown === 'Predictions' && '🔮'}
+                                </span>
+                                <div>
+                                    <h2>{activeDrillDown} Question Bank</h2>
+                                    <p className="drill-subtitle">Curated excellence for your band 8.0 target</p>
+                                </div>
+                            </div>
+                            <button className="close-drill-btn" onClick={() => setActiveDrillDown(null)}>✕</button>
+                        </div>
 
-            <ExamCountdownModal
-                isOpen={isCountdownModalOpen}
-                onClose={() => setIsCountdownModalOpen(false)}
-                onSave={handleSaveExamDate}
-                currentDate={targetExamDate}
-            />
-        </div >
+                        <div className="drill-stats-bar">
+                            <div className="drill-stat-item">
+                                <span className="label">Complexity</span>
+                                <span className="value">Mixed</span>
+                            </div>
+                            <div className="drill-stat-item">
+                                <span className="label">Total Assets</span>
+                                <span className="value">3.2k+</span>
+                            </div>
+                            <div className="drill-stat-item">
+                                <span className="label">Est. Time</span>
+                                <span className="value">15m / unit</span>
+                            </div>
+                        </div>
+
+                        <div className="question-bank-list custom-scrollbar">
+                            {(activeDrillDown === 'Reading' ? [
+                                { id: '#RD12001', title: 'Insects and Biodiversity', diff: 'Medium', type: 'True/False', icon: '🦋' },
+                                { id: '#RD12002', title: 'The Future of Workforce', diff: 'Hard', type: 'Completion', icon: '💼' },
+                                { id: '#RD12003', title: 'Quantum Computing Potential', diff: 'Hard', type: 'MCQ', icon: '⚛️' },
+                                { id: '#RD12004', title: 'Evolution of Urban Cities', diff: 'Medium', type: 'Matching', icon: '🏢' },
+                                { id: '#RD12005', title: 'Oceanic Ecosystems', diff: 'Medium', type: 'Short Answer', icon: '🌊' },
+                            ] : activeDrillDown === 'Listening' ? [
+                                { id: '#LS09001', title: 'Campus Orientation Talk', diff: 'Medium', type: 'Multiple Choice', icon: '🏫' },
+                                { id: '#LS09002', title: 'Natural History Podcast', diff: 'Hard', type: 'Gap Fill', icon: '🦖' },
+                                { id: '#LS09003', title: 'Business Project Brief', diff: 'Medium', type: 'Short Question', icon: '📊' },
+                            ] : activeDrillDown === 'Speaking' ? [
+                                { id: '#SP04001', title: 'Describe a historical place', diff: 'Hard', type: 'Part 2 Cue Card', icon: '🏰' },
+                                { id: '#SP04002', title: 'Family and Friends Discussion', diff: 'Medium', type: 'Part 1 Intro', icon: '👨‍👩‍👧‍👦' },
+                            ] : activeDrillDown === 'Writing' ? [
+                                { id: '#WR08001', title: 'Climate Change Solutions', diff: 'Hard', type: 'Task 2 Essay', icon: '🔥' },
+                                { id: '#WR08002', title: 'Global Population Trends', diff: 'Medium', type: 'Task 1 Graph', icon: '📈' },
+                            ] : [
+                                { id: '#PR01001', title: 'Upcoming Exam Predictions', diff: 'Hard', type: 'Prediction', icon: '🔮' },
+                                { id: '#PR01002', title: 'Monthly Strategy Guide', diff: 'Medium', type: 'Strategy', icon: '🎯' },
+                            ]).map((q, idx) => (
+                                <div
+                                    key={q.id}
+                                    className="question-bank-item float-item"
+                                    style={{ animationDelay: `${idx * 0.15}s` }}
+                                    onClick={() => navigate(`/practice/${q.id}`)}
+                                >
+                                    <div className="q-icon-wrapper-neon">{q.icon}</div>
+                                    <div className="q-info">
+                                        <div className="q-title-premium">{q.title}</div>
+                                        <div className="q-meta-glow">
+                                            <span className="q-id-tag">{q.id}</span>
+                                            <span className="dot-sep">•</span>
+                                            <span className="q-type-label">{q.type}</span>
+                                        </div>
+                                    </div>
+                                    <div className="q-action-group">
+                                        <div className={`difficulty-badge-neon ${q.diff.toLowerCase()}`}>
+                                            {q.diff}
+                                        </div>
+                                        <button className="q-preview-btn">Start →</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="drill-down-footer">
+                            <span className="footer-hint">💡 Pro Hint: Consistent practice improves performance by 40%</span>
+                            <button className="start-practice-btn-glow" onClick={() => navigate('/practice')}>
+                                Explore Full Library
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isScoreModalOpen && <ScoreTargetModal isOpen={isScoreModalOpen} onClose={() => setIsScoreModalOpen(false)} currentTheme={currentTheme} />}
+            {isCountdownModalOpen && (
+                <ExamCountdownModal
+                    isOpen={isCountdownModalOpen}
+                    onClose={() => setIsCountdownModalOpen(false)}
+                    onSave={handleSaveExamDate}
+                    initialDate={targetExamDate}
+                />
+            )}
+        </div>
     );
 };
 

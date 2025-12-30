@@ -96,7 +96,7 @@ const Pricing = ({ currentTheme, onToggleTheme }) => {
                     <div className="pricing-nav-links">
                         <Link to="/">Home</Link>
                         <Link to="/dashboard">Practice</Link>
-                        <a href="#mock-tests">Mock Tests</a>
+                        <Link to="/mock-tests">Mock Tests</Link>
                         <Link to="/pricing" className="active">Buy</Link>
                     </div>
                 </div>
