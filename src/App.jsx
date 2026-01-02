@@ -27,6 +27,9 @@ import AiClassifier from './components/AiClassifier';
 import { supabase } from './config/supabaseClient';
 import SupabaseExample from './components/SupabaseExample';
 import AdminPanel from './pages/Admin/AdminPanel';
+import QuestionBuilderPage from './pages/Admin/QuestionBuilderPage';
+import PassageBuilderPage from './pages/Admin/PassageBuilderPage';
+import ExamPreviewPage from './pages/Admin/ExamPreviewPage';
 
 function App() {
   const navigate = useNavigate();
@@ -91,7 +94,10 @@ function App() {
               onBackToDashboard={() => navigate('/dashboard')}
             />
           } />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin" element={<AdminPanel currentTheme={theme} onToggleTheme={toggleTheme} />} />
+          <Route path="/admin/builder" element={<QuestionBuilderPage currentTheme={theme} onToggleTheme={toggleTheme} />} />
+          <Route path="/admin/passage-builder" element={<PassageBuilderPage currentTheme={theme} onToggleTheme={toggleTheme} />} />
+          <Route path="/admin/exam-preview/:passageId" element={<ExamPreviewPage currentTheme={theme} onToggleTheme={toggleTheme} />} />
           <Route path="/supabase-test" element={<SupabaseExample />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/practice/:id" element={<PracticeTest />} />
@@ -159,12 +165,7 @@ function App() {
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/pricing" element={<Pricing currentTheme={theme} onToggleTheme={toggleTheme} />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/supabase-test" element={<SupabaseExample />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/practice/:id" element={<PracticeTest />} />
-          <Route path="/reading-test/:id" element={<ReadingTest />} />
-          <Route path="/ai-classifier" element={<AiClassifier />} />
+          <Route path="/admin/exam-preview/:passageId" element={<ExamPreviewPage currentTheme={theme} onToggleTheme={toggleTheme} />} />
         </Routes>
       </main>
 

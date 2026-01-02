@@ -332,7 +332,12 @@ const Dashboard = ({ user, onSignOut, currentTheme, onToggleTheme }) => {
                         {currentTheme === 'dark' ? '☀️' : '🌙'}
                     </button>
                     <div className="nav-account" onClick={handleSignOut}>
-                        <img src={rahulProfile} alt="Profile" className="nav-acc-img" />
+                        <img
+                            src={user?.user_metadata?.avatar_url || user?.user_metadata?.picture || rahulProfile}
+                            alt="Profile"
+                            className="nav-acc-img"
+                            referrerPolicy="no-referrer"
+                        />
                         <span>Account</span>
                     </div>
                 </div>

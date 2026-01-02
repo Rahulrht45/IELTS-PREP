@@ -1,88 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../config/supabaseClient';
+import SmartText from '../../components/SmartText';
 import './ReadingTest.css';
 
-const SmartText = ({ text, onLookup }) => {
-    if (!text) return null;
-    const tokens = text.split(/(\s+)/);
-    return (
-        <>
-            {tokens.map((token, i) => {
-                if (/\s+/.test(token)) return <span key={i}>{token}</span>;
-                const match = token.match(/^([^a-zA-Z]*)([a-zA-Z]+)([^a-zA-Z]*)$/);
-                if (match) {
-                    const [_, pre, word, post] = match;
-                    return (
-                        <span key={i}>
-                            {pre}
-                            <span
-                                className="live-word"
-                                onClick={(e) => onLookup(word, e)}
-                            >
-                                {word}
-                            </span>
-                            {post}
-                        </span>
-                    );
-                }
-                return <span key={i}>{token}</span>;
-            })}
-        </>
-    );
-};
 
-// Helper to render HTML with interactive words for lookup
-const SmartHtml = ({ html, onLookup }) => {
-    if (!html) return null;
-
-    const processNodes = (nodes) => {
-        return Array.from(nodes).map((node, i) => {
-            if (node.nodeType === 3) { // TEXT_NODE
-                const text = node.textContent;
-                const tokens = text.split(/(\s+)/);
-                return tokens.map((token, j) => {
-                    if (/\s+/.test(token)) return <span key={`s-${i}-${j}`}>{token}</span>;
-                    const match = token.match(/^([^a-zA-Z]*)([a-zA-Z]+)([^a-zA-Z]*)$/);
-                    if (match) {
-                        const [_, pre, word, post] = match;
-                        return (
-                            <span key={`w-${i}-${j}`}>
-                                {pre}
-                                <span
-                                    className="live-word"
-                                    onClick={(e) => onLookup(word, e)}
-                                >
-                                    {word}
-                                </span>
-                                {post}
-                            </span>
-                        );
-                    }
-                    return <span key={`t-${i}-${j}`}>{token}</span>;
-                });
-            } else if (node.nodeType === 1) { // ELEMENT_NODE
-                const Tag = node.tagName.toLowerCase();
-                const attrs = {};
-                Array.from(node.attributes).forEach(attr => {
-                    const name = attr.name === 'class' ? 'className' : attr.name;
-                    attrs[name] = attr.value;
-                });
-                return (
-                    <Tag {...attrs} key={`e-${i}`}>
-                        {processNodes(node.childNodes)}
-                    </Tag>
-                );
-            }
-            return null;
-        });
-    };
-
-    // Use a memoized or stable parser if possible, but for passages one-time parse is fine
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
-    return <>{processNodes(doc.body.firstChild.childNodes)}</>;
-};
 
 // Helper to render HTML and hydrate inputs
 const HtmlQuestion = ({ html, qId, answer, onAnswer, onLookup }) => {
@@ -120,7 +42,7 @@ const HtmlQuestion = ({ html, qId, answer, onAnswer, onLookup }) => {
     // Use SmartHtml inside the container for the text parts
     return (
         <div ref={containerRef} className="html-q-container">
-            <SmartHtml html={html} onLookup={onLookup} />
+            <SmartText text={html} onLookup={onLookup} />
         </div>
     );
 };
@@ -365,7 +287,9 @@ const ReadingTest = () => {
                     <div className="exam-brand">IELTS <span>PLUS</span></div>
                     <div className="divider"></div>
                     <div className="test-info">
-                        <span className="test-type">ACADEMIC READING</span>
+                        <span className="test-type">
+                            {questions.length > 0 ? (questions[0].section || 'PRACTICE').toUpperCase() : 'PRACTICE TEST'}
+                        </span>
                         <span className="passage-title-meta">{passage.title}</span>
                     </div>
                 </div>
@@ -385,11 +309,12 @@ const ReadingTest = () => {
 
             {/* Main Content Areas */}
             <main className="exam-workspace">
-                {/* Left Panel: The Reading Passage */}
+                {/* Left Panel: The Reading Passage / Context / Audio */}
                 <section className="passage-scroll-pane" ref={passageRef} onMouseUp={handleTextSelection}>
                     <div className="passage-content">
                         <div className="reading-text-body">
-                            <SmartHtml html={passage.content} onLookup={handleWordLookup} />
+                            {/* Render Passage Content (Text, Audio, or Image) */}
+                            <SmartText text={passage.content} onLookup={handleWordLookup} />
                         </div>
                     </div>
                 </section>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../config/supabaseClient';
 import { getDemoQuestionById, getAllDemoQuestions } from '../../data/demoQuestions';
+import SmartText from '../../components/SmartText';
 import './PracticeTest.css';
 
 const STRATEGIES = {
@@ -112,34 +113,7 @@ const STRATEGIES = {
     }
 };
 
-const SmartText = ({ text, onLookup }) => {
-    if (!text) return null;
-    const tokens = text.split(/(\s+)/);
-    return (
-        <>
-            {tokens.map((token, i) => {
-                if (/\s+/.test(token)) return <span key={i}>{token}</span>;
-                const match = token.match(/^([^a-zA-Z]*)([a-zA-Z]+)([^a-zA-Z]*)$/);
-                if (match) {
-                    const [_, pre, word, post] = match;
-                    return (
-                        <span key={i}>
-                            {pre}
-                            <span
-                                className="live-word"
-                                onClick={(e) => onLookup(word, e)}
-                            >
-                                {word}
-                            </span>
-                            {post}
-                        </span>
-                    );
-                }
-                return <span key={i}>{token}</span>;
-            })}
-        </>
-    );
-};
+
 
 const PracticeTest = () => {
     const { id } = useParams();
@@ -161,12 +135,129 @@ const PracticeTest = () => {
     const [feedback, setFeedback] = useState(null);
     const [showStrategy, setShowStrategy] = useState(true);
 
+    // Resizable Split Pane State
+    const [leftPaneWidth, setLeftPaneWidth] = useState(50); // initial 50%
+    const [isDragging, setIsDragging] = useState(false);
+
     // Vocab Context Menu State
     const [vocabMenu, setVocabMenu] = useState(null); // { x, y, word }
     const [vocabDefinition, setVocabDefinition] = useState(null);
     const [savingVocab, setSavingVocab] = useState(false);
 
     useEffect(() => {
+        const fetchQuestion = async () => {
+            setLoading(true);
+            setFeedback(null);
+            setUserAnswer('');
+            try {
+                // Try to fetch from database first
+                const { data, error } = await supabase
+                    .from('questions')
+                    .select('*')
+                    .eq('id', id)
+                    .is('deleted_at', null) // Only fetch non-deleted questions
+                    .single();
+
+                if (error || !data) {
+                    // If database query fails or returns nothing, use demo question
+                    const demoQuestion = getDemoQuestionById(id);
+                    if (demoQuestion) {
+                        setQuestion(demoQuestion);
+                    } else {
+                        throw new Error('Question not found');
+                    }
+                } else {
+                    setQuestion(data);
+                }
+            } catch (error) {
+                console.error('Error fetching question:', error);
+                // Try to load a demo question as final fallback
+                const demoQuestion = getDemoQuestionById(id);
+                if (demoQuestion) {
+                    setQuestion(demoQuestion);
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchDrawerQuestions = async () => {
+            try {
+                // Fetch questions of the same skill to populate the side drawer
+                let query = supabase
+                    .from('questions')
+                    .select('id, content, question_type, difficulty, section')
+                    .is('deleted_at', null); // Only show non-deleted questions
+
+                // Apply filters if we came from a specific category
+                if (skillFilter && skillFilter !== 'All') {
+                    query = query.eq('section', skillFilter);
+                }
+
+                const { data } = await query.limit(20);
+
+                let allQuestions = [];
+
+                // Add database questions if available
+                if (data && data.length > 0) {
+                    const formatted = data.map(q => {
+                        const rawText = q.content?.text || '';
+                        const plainText = rawText.replace(/<[^>]*>/g, '').trim();
+                        return {
+                            id: q.id,
+                            shortId: '#' + q.id.substring(0, 8),
+                            title: q.content?.topic || (plainText.substring(0, 30) + (plainText.length > 30 ? '...' : '')),
+                            diff: q.difficulty || 'Medium',
+                            app: 'Appeared (0)'
+                        };
+                    });
+                    allQuestions = [...formatted];
+                }
+
+                // Add demo questions
+                const demoQuestions = getAllDemoQuestions();
+                const filteredDemoQuestions = skillFilter && skillFilter !== 'All'
+                    ? demoQuestions.filter(q => q.section === skillFilter)
+                    : demoQuestions;
+
+                const formattedDemoQuestions = filteredDemoQuestions.map(q => {
+                    const rawText = q.content?.text || '';
+                    const plainText = rawText.replace(/<[^>]*>/g, '').trim();
+                    return {
+                        id: q.id,
+                        shortId: '#' + q.id.substring(0, 12),
+                        title: plainText.substring(0, 40) + (plainText.length > 40 ? '...' : '') || 'Demo Question',
+                        diff: q.difficulty || 'Medium',
+                        app: 'Demo'
+                    };
+                });
+
+                allQuestions = [...allQuestions, ...formattedDemoQuestions];
+                setDrawerQuestions(allQuestions);
+            } catch (err) {
+                console.error("Drawer fetch error:", err);
+                // If error, just use demo questions
+                const demoQuestions = getAllDemoQuestions();
+                const filteredDemoQuestions = skillFilter && skillFilter !== 'All'
+                    ? demoQuestions.filter(q => q.section === skillFilter)
+                    : demoQuestions;
+
+                const formattedDemoQuestions = filteredDemoQuestions.map(q => {
+                    const rawText = q.content?.text || '';
+                    const plainText = rawText.replace(/<[^>]*>/g, '').trim();
+                    return {
+                        id: q.id,
+                        shortId: '#' + q.id.substring(0, 12),
+                        title: plainText.substring(0, 40) + (plainText.length > 40 ? '...' : '') || 'Demo Question',
+                        diff: q.difficulty || 'Medium',
+                        app: 'Demo'
+                    };
+                });
+
+                setDrawerQuestions(formattedDemoQuestions);
+            }
+        };
+
         fetchQuestion();
         fetchDrawerQuestions();
 
@@ -178,7 +269,7 @@ const PracticeTest = () => {
             // Remove global click handler for clearing vocab menu
             document.removeEventListener('click', handleGlobalClick);
         };
-    }, [id]);
+    }, [id, skillFilter]);
 
     const handleGlobalClick = (e) => {
         if (!e.target.closest('.vocab-context-menu') && !e.target.closest('.live-word')) {
@@ -187,111 +278,45 @@ const PracticeTest = () => {
         }
     };
 
+    // --- Resizer Handlers ---
+    const handleMouseDown = () => setIsDragging(true);
+    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseMove = (e) => {
+        if (!isDragging) return;
+
+        // Calculate percentage based on viewport width
+        // Adjust logic if container isn't full width, but usually sufficient for full-screen apps
+        const newWidth = (e.clientX / window.innerWidth) * 100;
+
+        if (newWidth > 20 && newWidth < 80) { // Limit min/max width
+            setLeftPaneWidth(newWidth);
+        }
+    };
+
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            document.body.style.userSelect = 'none'; // prevent text selection while dragging
+            document.body.style.cursor = 'col-resize';
+        } else {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.userSelect = 'auto'; // restore selection
+            document.body.style.cursor = 'default';
+        }
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging]);
+
     useEffect(() => {
         document.addEventListener('click', handleGlobalClick);
         return () => document.removeEventListener('click', handleGlobalClick);
     }, []);
 
-    const fetchQuestion = async () => {
-        setLoading(true);
-        setFeedback(null);
-        setUserAnswer('');
-        try {
-            // Try to fetch from database first
-            const { data, error } = await supabase
-                .from('questions')
-                .select('*')
-                .eq('id', id)
-                .is('deleted_at', null) // Only fetch non-deleted questions
-                .single();
 
-            if (error || !data) {
-                // If database query fails or returns nothing, use demo question
-                const demoQuestion = getDemoQuestionById(id);
-                if (demoQuestion) {
-                    setQuestion(demoQuestion);
-                } else {
-                    throw new Error('Question not found');
-                }
-            } else {
-                setQuestion(data);
-            }
-        } catch (error) {
-            console.error('Error fetching question:', error);
-            // Try to load a demo question as final fallback
-            const demoQuestion = getDemoQuestionById(id);
-            if (demoQuestion) {
-                setQuestion(demoQuestion);
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchDrawerQuestions = async () => {
-        try {
-            // Fetch questions of the same skill to populate the side drawer
-            let query = supabase
-                .from('questions')
-                .select('id, content, question_type, difficulty, section')
-                .is('deleted_at', null); // Only show non-deleted questions
-
-            // Apply filters if we came from a specific category
-            if (skillFilter && skillFilter !== 'All') {
-                query = query.eq('section', skillFilter);
-            }
-
-            const { data } = await query.limit(20);
-
-            let allQuestions = [];
-
-            // Add database questions if available
-            if (data && data.length > 0) {
-                const formatted = data.map(q => ({
-                    id: q.id,
-                    shortId: '#' + q.id.substring(0, 8),
-                    title: q.content?.topic || q.content?.text?.substring(0, 30) + '...',
-                    diff: q.difficulty || 'Medium',
-                    app: 'Appeared (0)'
-                }));
-                allQuestions = [...formatted];
-            }
-
-            // Add demo questions
-            const demoQuestions = getAllDemoQuestions();
-            const filteredDemoQuestions = skillFilter && skillFilter !== 'All'
-                ? demoQuestions.filter(q => q.section === skillFilter)
-                : demoQuestions;
-
-            const formattedDemoQuestions = filteredDemoQuestions.map(q => ({
-                id: q.id,
-                shortId: '#' + q.id.substring(0, 12),
-                title: q.content?.text?.substring(0, 40) + '...' || 'Demo Question',
-                diff: q.difficulty || 'Medium',
-                app: 'Demo'
-            }));
-
-            allQuestions = [...allQuestions, ...formattedDemoQuestions];
-            setDrawerQuestions(allQuestions);
-        } catch (err) {
-            console.error("Drawer fetch error:", err);
-            // If error, just use demo questions
-            const demoQuestions = getAllDemoQuestions();
-            const filteredDemoQuestions = skillFilter && skillFilter !== 'All'
-                ? demoQuestions.filter(q => q.section === skillFilter)
-                : demoQuestions;
-
-            const formattedDemoQuestions = filteredDemoQuestions.map(q => ({
-                id: q.id,
-                shortId: '#' + q.id.substring(0, 12),
-                title: q.content?.text?.substring(0, 40) + '...' || 'Demo Question',
-                diff: q.difficulty || 'Medium',
-                app: 'Demo'
-            }));
-
-            setDrawerQuestions(formattedDemoQuestions);
-        }
-    };
 
     useEffect(() => {
         // Initialize filtered questions whenever drawer questions change
@@ -367,7 +392,7 @@ const PracticeTest = () => {
     };
 
     // --- Vocab Feature Logic ---
-    const handleTextSelection = async (e) => {
+    const handleTextSelection = async () => {
         const selection = window.getSelection();
         const text = selection.toString().trim();
 
@@ -605,61 +630,98 @@ const PracticeTest = () => {
                 </div>
             </header>
 
-            <div className="test-main-layout two-column-layout">
+            {/* Main Interactive Layout - Resizable */}
+            <div className="test-main-layout" style={{ display: 'flex', height: 'calc(100vh - 70px)', overflow: 'hidden', position: 'relative' }}>
+
                 {/* Left Column - Passage (Scrollable) */}
-                {(question.content.passage || question.content.audio_url || question.content.audio_generated) && (
-                    <div className="passage-column scrollable-column" onMouseUp={handleTextSelection}>
-                        <div className="resource-panel premium-glass">
-                            <div className="panel-header">
-                                <span className="label">
-                                    {question.section === 'Listening' ? '🎧 Audio Source' : '📖 PASSAGE 1'}
-                                </span>
-                            </div>
-
-                            {/* Standard Audio Player (for MP3 files) */}
-                            {question.content.audio_url && (
-                                <div className="audio-wrapper">
-                                    <audio controls src={question.content.audio_url}>
-                                        Your browser does not support audio.
-                                    </audio>
-                                </div>
-                            )}
-
-                            {/* TTS Audio Player (if generated via AI) */}
-                            {!question.content.audio_url && (question.content.audio_generated || (question.section === 'Listening' && question.content.passage)) && (
-                                <div className="audio-wrapper tts-player">
-                                    <div className="tts-controls-row">
-                                        <button
-                                            className="tts-play-btn"
-                                            onClick={handlePlayTTS}
-                                        >
-                                            ▶ Play Audio Track
-                                        </button>
-                                        <button
-                                            className="tts-stop-btn"
-                                            onClick={() => window.speechSynthesis.cancel()}
-                                        >
-                                            ⏹ Stop
-                                        </button>
-                                    </div>
-                                    <div className="audio-visualizer-mock"></div>
-                                </div>
-                            )}
-
-                            {/* Show Passage Text only for Reading (or if it's not strictly hidden for listening) */}
-                            {question.content.passage && (
-                                <div className={`passage-content ${question.section === 'Listening' ? 'blurred-text' : ''}`}>
-                                    <SmartText text={question.content.passage} onLookup={handleWordLookup} />
-                                </div>
-                            )}
+                <div
+                    className="passage-column scrollable-column"
+                    onMouseUp={handleTextSelection}
+                    style={{
+                        width: (question.content.passage || question.content.audio_url || question.content.audio_generated) ? `${leftPaneWidth}%` : '0%',
+                        display: (question.content.passage || question.content.audio_url || question.content.audio_generated) ? 'block' : 'none',
+                        overflowY: 'auto'
+                    }}
+                >
+                    <div className="resource-panel premium-glass" style={{ height: '100%', borderRadius: 0, border: 'none' }}>
+                        <div className="panel-header">
+                            <span className="label">
+                                {question.section === 'Listening' ? '🎧 Audio Source' : '📖 PASSAGE 1'}
+                            </span>
                         </div>
+
+                        {/* Standard Audio Player (for MP3 files) */}
+                        {question.content.audio_url && (
+                            <div className="audio-wrapper">
+                                <audio controls src={question.content.audio_url}>
+                                    Your browser does not support audio.
+                                </audio>
+                            </div>
+                        )}
+
+                        {/* TTS Audio Player (if generated via AI) */}
+                        {!question.content.audio_url && (question.content.audio_generated || (question.section === 'Listening' && question.content.passage)) && (
+                            <div className="audio-wrapper tts-player">
+                                <div className="tts-controls-row">
+                                    <button
+                                        className="tts-play-btn"
+                                        onClick={handlePlayTTS}
+                                    >
+                                        ▶ Play Audio Track
+                                    </button>
+                                    <button
+                                        className="tts-stop-btn"
+                                        onClick={() => window.speechSynthesis.cancel()}
+                                    >
+                                        ⏹ Stop
+                                    </button>
+                                </div>
+                                <div className="audio-visualizer-mock"></div>
+                            </div>
+                        )}
+
+                        {/* Show Passage Text only for Reading (or if it's not strictly hidden for listening) */}
+                        {question.content.passage && (
+                            <div className={`passage-content ${question.section === 'Listening' ? 'blurred-text' : ''}`}>
+                                <SmartText text={question.content.passage} onLookup={handleWordLookup} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* DRAGGER HANDLE (Only show if passage exists) */}
+                {(question.content.passage || question.content.audio_url || question.content.audio_generated) && (
+                    <div
+                        onMouseDown={handleMouseDown}
+                        style={{
+                            width: '6px',
+                            cursor: 'col-resize',
+                            background: isDragging ? 'var(--neon-blue)' : 'var(--border-color, #334155)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 50,
+                            transition: 'background 0.2s',
+                            boxShadow: isDragging ? '0 0 10px var(--neon-blue)' : 'none'
+                        }}
+                        onMouseOver={(e) => { if (!isDragging) e.currentTarget.style.background = 'var(--neon-blue)'; }}
+                        onMouseOut={(e) => { if (!isDragging) e.currentTarget.style.background = 'var(--border-color, #334155)'; }}
+                    >
                     </div>
                 )}
 
                 {/* Right Column - Questions (Scrollable) */}
-                <div className="questions-column scrollable-column" onMouseUp={handleTextSelection}>
-                    <div className="question-panel">
-                        <div className="question-card premium-glass">
+                <div
+                    className="questions-column scrollable-column"
+                    onMouseUp={handleTextSelection}
+                    style={{
+                        width: (question.content.passage || question.content.audio_url || question.content.audio_generated) ? `${100 - leftPaneWidth}%` : '100%',
+                        flex: (question.content.passage || question.content.audio_url || question.content.audio_generated) ? 'none' : 1,
+                        overflowY: 'auto'
+                    }}
+                >
+                    <div className="question-panel" style={{ height: '100%' }}>
+                        <div className="question-card premium-glass" style={{ minHeight: '100%', borderRadius: 0, border: 'none' }}>
                             <div className="questions-header">
                                 <h3>Question Task</h3>
                                 {/* Render Instructions if available, else fallback to text */}
@@ -701,30 +763,30 @@ const PracticeTest = () => {
                                     </button>
                                 </div>
                             )}
-                        </div>
 
-                        {/* Feedback Section */}
-                        {feedback && (
-                            <div className={`result-card ${feedback.isCorrect ? 'is-correct' : 'is-incorrect'}`}>
-                                <div className="result-header">
-                                    <div className="result-badge">
-                                        {feedback.isCorrect ? '✨ CORRECT' : '⚡ INCORRECT'}
+                            {/* Feedback Section */}
+                            {feedback && (
+                                <div className={`result-card ${feedback.isCorrect ? 'is-correct' : 'is-incorrect'}`}>
+                                    <div className="result-header">
+                                        <div className="result-badge">
+                                            {feedback.isCorrect ? '✨ CORRECT' : '⚡ INCORRECT'}
+                                        </div>
+                                        <div className="correct-answer-reveal">
+                                            Expected: <span>{String(question.correct_answer)}</span>
+                                        </div>
                                     </div>
-                                    <div className="correct-answer-reveal">
-                                        Expected: <span>{String(question.correct_answer)}</span>
-                                    </div>
+                                    {feedback.explanation && (
+                                        <div className="explanation-box">
+                                            <h4>Rationalization</h4>
+                                            <p><SmartText text={feedback.explanation} onLookup={handleWordLookup} /></p>
+                                        </div>
+                                    )}
+                                    <button className="next-btn" onClick={() => navigate('/practice')}>
+                                        Return to Dashboard →
+                                    </button>
                                 </div>
-                                {feedback.explanation && (
-                                    <div className="explanation-box">
-                                        <h4>Rationalization</h4>
-                                        <p><SmartText text={feedback.explanation} onLookup={handleWordLookup} /></p>
-                                    </div>
-                                )}
-                                <button className="next-btn" onClick={() => navigate('/practice')}>
-                                    Return to Dashboard →
-                                </button>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
 

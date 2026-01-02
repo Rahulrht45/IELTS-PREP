@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabaseClient';
 import './PassageManager.css';
 
 const PassageManager = () => {
+    const navigate = useNavigate();
     const [passages, setPassages] = useState([]);
-    const [selectedPassage, setSelectedPassage] = useState(null);
-    const [isCreating, setIsCreating] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
-
-    const [passageForm, setPassageForm] = useState({
-        title: '',
-        content: '',
-        difficulty: 'Medium',
-        exam_type: 'Academic',
-        word_count: 0
-    });
 
     // Load all passages
     useEffect(() => {
@@ -38,118 +30,11 @@ const PassageManager = () => {
     };
 
     const handleCreateNew = () => {
-        setPassageForm({
-            title: '',
-            content: '',
-            difficulty: 'Medium',
-            exam_type: 'Academic',
-            word_count: 0
-        });
-        setSelectedPassage(null);
-        setIsCreating(true);
-        setMessage('');
+        navigate('/admin/passage-builder');
     };
 
-    const handleEdit = (passage) => {
-        setPassageForm({
-            title: passage.title,
-            content: passage.content,
-            difficulty: passage.difficulty,
-            exam_type: passage.exam_type || 'Academic',
-            word_count: passage.word_count || 0
-        });
-        setSelectedPassage(passage.id);
-        setIsCreating(true);
-        setMessage('');
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setPassageForm(prev => {
-            const newData = { ...prev, [name]: value };
-            if (name === 'content') {
-                newData.word_count = value.trim().split(/\s+/).length;
-            }
-            return newData;
-        });
-    };
-
-    const insertTag = (tag) => {
-        const textarea = document.querySelector('textarea[name="content"]');
-        if (!textarea) return;
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = passageForm.content;
-        const before = text.substring(0, start);
-        const selected = text.substring(start, end);
-        const after = text.substring(end);
-
-        let newText;
-        // Academic Formatting Logic
-        if (tag === 'p') newText = `${before}<p>${selected || 'Paragraph text'}</p>${after}`;
-        else if (tag === 'lead') newText = `${before}<p class="passage-lead">${selected || 'Lead/Intro text'}</p>${after}`;
-        else if (tag === 'header') newText = `${before}<h3>${selected || 'Section Header'}</h3>${after}`;
-        else if (tag === 'letter') newText = `${before}<span class="paragraph-letter">A</span>${after}`;
-        else if (tag === 'marker') newText = `${before}<span class="exam-marker">1</span>${after}`;
-        else if (tag === 'highlight') newText = `${before}<span class="highlight">${selected}</span>${after}`;
-        else if (tag === 'center') newText = `${before}<div class="text-center">${selected}</div>${after}`;
-        else if (tag === 'right') newText = `${before}<div class="text-right">${selected}</div>${after}`;
-        else if (tag === 'justify') newText = `${before}<div class="text-justify">${selected}</div>${after}`;
-        else if (tag === 'indent') newText = `${before}<div class="text-indent">${selected}</div>${after}`;
-        else if (tag === 'table') newText = `${before}\n<table class="exam-table">\n  <tr>\n    <th>Header 1</th>\n    <th>Header 2</th>\n  </tr>\n  <tr>\n    <td>Data 1</td>\n    <td>Data 2</td>\n  </tr>\n</table>\n${after}`;
-        else newText = text;
-
-        setPassageForm(prev => ({ ...prev, content: newText }));
-        // Restore focus? (React state update makes this tricky without ref, keeping simple for now)
-    };
-
-    const handleSave = async () => {
-        if (!passageForm.title || !passageForm.content) {
-            setMessage('❌ Please fill in Title and Content.');
-            return;
-        }
-
-        setLoading(true);
-        setMessage('');
-
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('You must be logged in.');
-
-            const passageData = {
-                title: passageForm.title,
-                content: passageForm.content,
-                difficulty: passageForm.difficulty,
-                exam_type: passageForm.exam_type,
-                word_count: passageForm.word_count
-            };
-
-            if (selectedPassage) {
-                // Update
-                const { error } = await supabase
-                    .from('passages')
-                    .update(passageData)
-                    .eq('id', selectedPassage);
-                if (error) throw error;
-                setMessage('✅ Passage updated successfully!');
-            } else {
-                // Create
-                const { error } = await supabase
-                    .from('passages')
-                    .insert([passageData]);
-                if (error) throw error;
-                setMessage('✅ Passage created successfully!');
-            }
-
-            setIsCreating(false);
-            loadPassages();
-        } catch (err) {
-            console.error('Error saving passage:', err);
-            setMessage('❌ ' + err.message);
-        } finally {
-            setLoading(false);
-        }
+    const handleEdit = (passageId) => {
+        navigate(`/admin/passage-builder?id=${passageId}`);
     };
 
     const handleDelete = async (id, e) => {
@@ -158,206 +43,136 @@ const PassageManager = () => {
             e.stopPropagation();
         }
 
-        if (!window.confirm('Delete this passage permanently?')) return;
+        if (!window.confirm('Move this passage to recycle bin?')) return;
 
         setLoading(true);
         try {
-            // Get user to check permissions
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                throw new Error('You must be logged in to delete passages.');
-            }
-
-            // Try soft delete first (mark as deleted)
-            const { data: softDeleteData, error: softDeleteError } = await supabase
+            const { error } = await supabase
                 .from('passages')
                 .update({ deleted_at: new Date().toISOString() })
-                .eq('id', id)
-                .select();
+                .eq('id', id);
 
-            console.log('Soft delete response:', { softDeleteData, softDeleteError });
+            if (error) throw error;
 
-            // Check if soft delete actually worked
-            if (!softDeleteError && softDeleteData && softDeleteData.length > 0) {
-                setMessage('✅ Passage moved to recycle bin.');
-                await loadPassages();
-                return;
-            }
-
-            // If soft delete failed or returned no data, try hard delete
-            console.log('Soft delete failed or returned no data, trying hard delete...');
-            const { data: hardDeleteData, error: hardDeleteError } = await supabase
-                .from('passages')
-                .delete()
-                .eq('id', id)
-                .select();
-
-            console.log('Hard delete response:', { hardDeleteData, hardDeleteError });
-
-            if (hardDeleteError) {
-                throw hardDeleteError;
-            }
-
-            // Check if hard delete actually worked
-            if (!hardDeleteData || hardDeleteData.length === 0) {
-                throw new Error('Delete operation completed but no rows were affected. This may be due to Row Level Security (RLS) policies. Please check if you have permission to delete this passage.');
-            }
-
-            setMessage('✅ Passage deleted successfully.');
+            setMessage('✅ Passage moved to recycle bin.');
             await loadPassages();
         } catch (err) {
             console.error('Delete error:', err);
             setMessage('❌ Failed: ' + err.message);
-            alert('Delete failed: ' + err.message + '\n\nThis is likely due to database permissions (RLS policies).\n\nPlease check browser console (F12) for details.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="passage-manager">
-            <div className="manager-header">
-                <h2>📖 Passage Management</h2>
-                <button className="btn-create" onClick={handleCreateNew}>
-                    ➕ Create New Passage
+        <div className="passage-list-view">
+            <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <div>
+                    <h2 style={{ fontSize: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        📖 Reading Passages
+                        <span className="badge" style={{ background: '#3b82f6', fontSize: '0.9rem', padding: '4px 10px', borderRadius: '20px' }}>{passages.length}</span>
+                    </h2>
+                    <p style={{ color: '#94a3b8', margin: '5px 0 0 0' }}>Manage all your IELTS reading passages</p>
+                </div>
+                <button
+                    className="add-new-btn"
+                    onClick={handleCreateNew}
+                >
+                    <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>+</span> Create New Passage
                 </button>
             </div>
 
             {message && (
-                <div className={`message ${message.includes('❌') ? 'error' : 'success'}`}>
+                <div className={`message ${message.includes('❌') ? 'error' : 'success'}`} style={{ marginBottom: '1rem', padding: '1rem', borderRadius: '8px', background: message.includes('❌') ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)' }}>
                     {message}
                 </div>
             )}
 
-            {isCreating ? (
-                <div className="passage-editor">
-                    <h3>{selectedPassage ? 'Edit Passage' : 'Create New Passage'}</h3>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Title *</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={passageForm.title}
-                                onChange={handleInputChange}
-                                placeholder="e.g., The History of Coffee"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>Exam Type</label>
-                            <select name="exam_type" value={passageForm.exam_type} onChange={handleInputChange}>
-                                <option value="Academic">Academic</option>
-                                <option value="General Training">General Training</option>
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Difficulty</label>
-                            <select name="difficulty" value={passageForm.difficulty} onChange={handleInputChange}>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div className="form-group">
-                        <label>Passage Content (HTML Supported) *</label>
-                        <div className="rich-toolbar">
-                            <button onClick={() => insertTag('p')}>Paragraph</button>
-                            <button onClick={() => insertTag('lead')}>Lead Text</button>
-                            <button onClick={() => insertTag('header')}>Section Head</button>
-                            <button onClick={() => insertTag('letter')}>Letter (A)</button>
-                            <button onClick={() => insertTag('marker')}>Marker [1]</button>
-                            <button onClick={() => insertTag('highlight')}>Highlight</button>
-                            <button onClick={() => insertTag('center')}>Center</button>
-                            <button onClick={() => insertTag('right')}>Right</button>
-                            <button onClick={() => insertTag('justify')}>Justify</button>
-                            <button onClick={() => insertTag('indent')}>Indent</button>
-                            <button onClick={() => insertTag('table')}>Table</button>
-                            <span className="toolbar-hint">Academic Formatting Tools</span>
-                        </div>
-                        <div className="editor-split">
-                            <textarea
-                                name="content"
-                                value={passageForm.content}
-                                onChange={handleInputChange}
-                                rows={20}
-                                placeholder="Paste or type the reading passage here..."
-                                required
-                            />
-                            <div className="passage-live-preview">
-                                <div className="preview-label">Live Preview</div>
-                                <div
-                                    className="preview-content"
-                                    dangerouslySetInnerHTML={{ __html: passageForm.content }}
-                                />
-                            </div>
-                        </div>
-                        <div className="word-count-display">
-                            📊 Word Count: <strong>{passageForm.word_count}</strong> words
-                        </div>
-                    </div>
-
-                    <div className="editor-actions">
-                        <button className="btn-save" onClick={handleSave} disabled={loading}>
-                            {loading ? '💾 Saving...' : '💾 Save Passage'}
-                        </button>
-                        <button className="btn-cancel" onClick={() => setIsCreating(false)}>
-                            ❌ Cancel
-                        </button>
-                    </div>
-                </div>
-            ) : (
-                <div className="passages-list">
-                    <h3>Saved Passages ({passages.length})</h3>
-
-                    {passages.length === 0 ? (
-                        <div className="empty-state">
-                            <p>📭 No passages yet. Create your first passage to get started!</p>
-                        </div>
-                    ) : (
-                        <div className="passages-grid">
-                            {passages.map(passage => (
-                                <div key={passage.id} className="passage-card">
-                                    <div className="passage-header">
-                                        <h4>{passage.title}</h4>
-                                        <div className="passage-badges">
-                                            <span className={`badge ${passage.difficulty.toLowerCase()}`}>
-                                                {passage.difficulty}
-                                            </span>
-                                            <span className="badge exam-type">{passage.exam_type}</span>
+            <div className="passages-table-container premium-glass" style={{
+                padding: '1rem',
+                maxHeight: 'calc(100vh - 300px)',
+                overflowY: 'auto',
+                overflowX: 'hidden'
+            }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', color: '#e2e8f0' }}>
+                    <thead style={{ position: 'sticky', top: 0, background: 'var(--admin-sidebar-bg)', zIndex: 10 }}>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left' }}>
+                            <th style={{ padding: '12px' }}>ID</th>
+                            <th style={{ padding: '12px' }}>Title</th>
+                            <th style={{ padding: '12px' }}>Section</th>
+                            <th style={{ padding: '12px' }}>Type</th>
+                            <th style={{ padding: '12px' }}>Difficulty</th>
+                            <th style={{ padding: '12px' }}>Words</th>
+                            <th style={{ padding: '12px' }}>Created</th>
+                            <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {passages.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#64748b' }}>
+                                    📭 No passages yet. Click "Create New Passage" to start!
+                                </td>
+                            </tr>
+                        ) : (
+                            passages.map(passage => (
+                                <tr key={passage.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                    <td style={{ padding: '12px', fontFamily: 'monospace', color: '#64748b' }}>#{passage.id.substring(0, 6)}</td>
+                                    <td style={{ padding: '12px' }}>
+                                        <div style={{ fontWeight: '600' }}>{passage.title}</div>
+                                        <div style={{ fontSize: '0.85rem', color: '#94a3b8', maxWidth: '400px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {passage.content.replace(/<[^>]*>/g, '').substring(0, 60)}...
                                         </div>
-                                    </div>
-
-                                    <div className="passage-meta">
-                                        <span>📊 {passage.word_count} words</span>
-                                        <span>📅 {new Date(passage.created_at).toLocaleDateString()}</span>
-                                    </div>
-
-
-                                    <div className="passage-preview">
-                                        {passage.content.substring(0, 150)}...
-                                    </div>
-
-                                    <div className="passage-actions">
-                                        <button className="btn-edit" onClick={() => handleEdit(passage)}>
-                                            ✏️ Edit
+                                    </td>
+                                    <td style={{ padding: '12px' }}>
+                                        <span className="badge" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                                            {passage.section || 'Reading'}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '12px' }}>
+                                        <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.1)', color: '#818cf8', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                                            {passage.exam_type || 'Academic'}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '12px' }}>
+                                        <span className={`badge ${passage.difficulty.toLowerCase()}`} style={{
+                                            background: passage.difficulty === 'Easy' ? 'rgba(16, 185, 129, 0.1)' :
+                                                passage.difficulty === 'Hard' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(251, 191, 36, 0.1)',
+                                            color: passage.difficulty === 'Easy' ? '#10b981' :
+                                                passage.difficulty === 'Hard' ? '#ef4444' : '#fbbf24',
+                                            padding: '2px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '0.8rem'
+                                        }}>
+                                            {passage.difficulty}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '12px', color: '#94a3b8' }}>{passage.word_count || 0}</td>
+                                    <td style={{ padding: '12px', fontSize: '0.9rem', color: '#94a3b8' }}>
+                                        {new Date(passage.created_at).toLocaleDateString()}
+                                    </td>
+                                    <td style={{ padding: '12px', textAlign: 'right' }}>
+                                        <button
+                                            onClick={() => handleEdit(passage.id)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', marginRight: '8px' }}
+                                            title="Edit"
+                                        >
+                                            ✏️
                                         </button>
-                                        <button type="button" className="btn-delete" onClick={(e) => handleDelete(passage.id, e)}>
-                                            🗑️ Delete
+                                        <button
+                                            onClick={(e) => handleDelete(passage.id, e)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
+                                            title="Delete"
+                                        >
+                                            🗑️
                                         </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

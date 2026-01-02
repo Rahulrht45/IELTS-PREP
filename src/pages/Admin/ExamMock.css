@@ -1,0 +1,280 @@
+/* ExamMock.css - Official IELTS Computer Style (Themable) */
+
+:root {
+    /* Light Mode Defaults */
+    --exam-bg: #FFFFFF;
+    --exam-text: #000000;
+    --exam-header-bg: #111827;
+    /* Always dark header generally, or easier to read */
+    --exam-header-text: #FFFFFF;
+    --exam-border: #E5E7EB;
+
+    --exam-input-bg: #FFFFFF;
+    --exam-input-border: #AAAAAA;
+    --exam-input-text: #000000;
+
+    --exam-badge-bg: #000000;
+    --exam-badge-text: #FFFFFF;
+
+    --exam-instruction-text: #333333;
+
+    --exam-scrollbar-track: #F1F1F1;
+    --exam-scrollbar-thumb: #CCCCCC;
+
+    --exam-mcq-radio-border: #000000;
+}
+
+[data-theme='dark'] {
+    /* Dark Mode Overrides */
+    --exam-bg: #1E293B;
+    /* Slate 800 */
+    --exam-text: #E2E8F0;
+    /* Slate 200 */
+    --exam-header-bg: #0F172A;
+    /* Slate 900 */
+    --exam-border: #334155;
+    /* Slate 700 */
+
+    --exam-input-bg: #334155;
+    --exam-input-border: #475569;
+    --exam-input-text: #F8FAFC;
+
+    --exam-badge-bg: #F8FAFC;
+    --exam-badge-text: #1E293B;
+
+    --exam-instruction-text: #94A3B8;
+    /* Slate 400 */
+
+    --exam-scrollbar-track: #0F172A;
+    --exam-scrollbar-thumb: #475569;
+
+    --exam-mcq-radio-border: #E2E8F0;
+}
+
+/* Main Layout */
+.exam-preview-page {
+    background-color: var(--exam-bg) !important;
+    font-family: 'Arial', sans-serif !important;
+    color: var(--exam-text) !important;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Header */
+.exam-header {
+    background-color: var(--exam-header-bg) !important;
+    color: var(--exam-header-text) !important;
+    border-bottom: 1px solid var(--exam-border) !important;
+    height: 60px;
+    padding: 0 30px !important;
+    box-shadow: none !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-header h2 {
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    /* Header text usually stays white on dark bar */
+}
+
+.exam-header-meta {
+    background-color: #374151;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+/* Panes - Split Screen */
+.exam-pane {
+    background-color: var(--exam-bg) !important;
+    color: var(--exam-text) !important;
+    padding: 30px !important;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.exam-pane.left {
+    border-right: 2px solid var(--exam-border) !important;
+}
+
+.exam-pane.right {
+    padding-left: 30px !important;
+}
+
+/* Passage Typography */
+.academic-passage h1 {
+    font-family: 'Arial', sans-serif !important;
+    font-size: 22px !important;
+    text-align: center;
+    border-bottom: none !important;
+    margin-bottom: 25px !important;
+    text-transform: uppercase;
+    color: var(--exam-text) !important;
+}
+
+.academic-passage-text {
+    font-size: 16px;
+    line-height: 1.7;
+    text-align: left !important;
+    color: var(--exam-text) !important;
+}
+
+/* Question Section */
+.exam-questions-container {
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Individual Question Item */
+.exam-question-item {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin-bottom: 40px !important;
+}
+
+.question-header-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.question-number-box {
+    background: var(--exam-badge-bg);
+    color: var(--exam-badge-text);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Instructions */
+.exam-instruction-box {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 15px;
+    color: var(--exam-instruction-text) !important;
+    font-style: italic !important;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+/* Question Text Content */
+.question-content {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: var(--exam-text) !important;
+}
+
+/* Inputs - Inline Gaps */
+.gap-input {
+    border: 1px solid var(--exam-input-border);
+    border-radius: 0px;
+    padding: 4px 8px;
+    background: var(--exam-input-bg);
+    margin: 0 5px;
+    width: 140px;
+    display: inline-block;
+    color: var(--exam-input-text);
+}
+
+.gap-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gap-badge {
+    background: var(--exam-badge-bg);
+    color: var(--exam-badge-text);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* LIVEMODE WORD INTERACTION */
+.live-word {
+    cursor: pointer;
+    border-bottom: none;
+    transition: all 0.2s ease;
+}
+
+.live-word:hover {
+    background-color: rgba(255, 215, 0, 0.3);
+    /* Soft Gold Highlight */
+    color: var(--exam-text);
+    border-bottom: 1px solid var(--exam-text);
+}
+
+
+/* MCQ Options */
+.exam-mcq-option {
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    margin-bottom: 8px;
+    padding: 5px 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.exam-mcq-option:hover {
+    background: transparent !important;
+    opacity: 0.8;
+}
+
+.exam-mcq-radio {
+    width: 18px !important;
+    height: 18px !important;
+    border: 1px solid var(--exam-mcq-radio-border) !important;
+    border-radius: 50% !important;
+}
+
+/* Bottom Input (Fallback) */
+.exam-bottom-input {
+    border: 1px solid var(--exam-input-border) !important;
+    background: var(--exam-input-bg) !important;
+    color: var(--exam-input-text) !important;
+    border-radius: 0 !important;
+    padding: 8px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--exam-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--exam-scrollbar-thumb);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--exam-scrollbar-thumb);
+    /* Slight hover effect could be darket */
+}

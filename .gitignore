@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Allowed vscode files
+!.vscode/launch.json
+!.vscode/tasks.json
